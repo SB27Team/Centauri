@@ -8,5 +8,11 @@
     <artifactId>Centauri</artifactId>
     <version>1.0</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.windup.decompiler</groupId>
+            <artifactId>decompiler-fernflower</artifactId>
+            <version>4.0.1.Final</version>
+        </dependency>
+    </dependencies>
 </project>

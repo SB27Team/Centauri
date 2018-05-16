@@ -1,5 +1,8 @@
 package net.sb27team.centauri.scanner;
 
+import net.sb27team.centauri.scanner.method.MNetworkRef;
+import net.sb27team.centauri.scanner.method.MRuntime;
+import net.sb27team.centauri.scanner.method.MWebcam;
 import net.sb27team.centauri.utils.ASMUtils;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -22,7 +25,9 @@ public class Scanner {
     );
 
     private List<IMethodScanner> methodScanners = Arrays.asList(
-
+            new MWebcam(),
+            new MRuntime(),
+            new MNetworkRef()
     );
 
     public Scanner(File jar) {
@@ -45,13 +50,23 @@ public class Scanner {
         return threats;
     }
 
-    public class Threat {
+    public static void main(String[] args) {
+        // For testing
+        Scanner s = new Scanner(new File(args[0]));
+        s.runScan().forEach(t -> System.out.println("Threat: " + t.name + ": " + t.description + " loc: " + t.location));
+    }
+
+    public static class Threat {
         private final String name, description, location;
 
         public Threat(String name, String description, String location) {
             this.name = name;
             this.description = description;
             this.location = location;
+        }
+
+        public Threat(String name, String description, MethodNode mn, String location) {
+            this(name, description, mn.name + ": " + location);
         }
 
         public String getName() {

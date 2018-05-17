@@ -5,18 +5,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.scanner.resource.ResourceManager;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.zip.ZipEntry;
 
 public class MainMenuController {
-    private static Image JAVA_ICON;
-    private static Image FOLDER_ICON;
     public static MainMenuController INSTANCE = new MainMenuController();
 
     @FXML
@@ -26,12 +26,9 @@ public class MainMenuController {
     @FXML
     private Label leftStatus;
 
+
     public void initialize() {
         INSTANCE = this;
-
-        JAVA_ICON = new Image(getClass().getResourceAsStream("/icons/java.png"));
-        FOLDER_ICON = new Image(getClass().getResourceAsStream("/icons/folder.png"));
-
     }
 
     @FXML
@@ -78,7 +75,7 @@ public class MainMenuController {
             packageEntryMap.get(parent).add(zipEntry);
         }
 
-        TreeItem<String> rootItem = new TreeItem<>(Centauri.INSTANCE.getOpenedFile().getName(), new ImageView(FOLDER_ICON));
+        TreeItem<String> rootItem = new TreeItem<>(Centauri.INSTANCE.getOpenedFile().getName(), new ImageView(ResourceManager.FOLDER_ICON));
 
 //        for (Map.Entry<String, List<ZipEntry>> stringListEntry : packageEntryMap.entrySet()) {
 //
@@ -101,13 +98,13 @@ public class MainMenuController {
         }).forEach(entry -> {
             if (entry.getKey() == null) {
                 for (ZipEntry zipEntry : entry.getValue()) {
-                    rootItem.getChildren().add(new TreeItem<>(new File(zipEntry.getName()).getName(), new ImageView(JAVA_ICON)));
+                    rootItem.getChildren().add(new TreeItem<>(new File(zipEntry.getName()).getName(), new ImageView(ResourceManager.getIconForName(zipEntry.getName()))));
                 }
             } else {
-                TreeItem<String> pack = new TreeItem<>(entry.getKey().replace('\\', '.').replace('/', '.'), new ImageView(FOLDER_ICON));
+                TreeItem<String> pack = new TreeItem<>(entry.getKey().replace('\\', '.').replace('/', '.'), new ImageView(ResourceManager.FOLDER_ICON));
 
                 for (ZipEntry zipEntry : entry.getValue()) {
-                    pack.getChildren().add(new TreeItem<>(new File(zipEntry.getName()).getName(), new ImageView(JAVA_ICON)));
+                    pack.getChildren().add(new TreeItem<>(new File(zipEntry.getName()).getName(), new ImageView(ResourceManager.getIconForName(zipEntry.getName()))));
                 }
 
                 rootItem.getChildren().add(pack);

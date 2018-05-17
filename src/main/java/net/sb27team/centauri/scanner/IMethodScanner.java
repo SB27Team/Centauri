@@ -1,15 +1,12 @@
 package net.sb27team.centauri.scanner;
 
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 /*
  * Created by Cubxity on 16/05/2018
  */
 public interface IMethodScanner {
-    Scanner.Threat scan(MethodNode mn);
+    Scanner.Threat scan(MethodNode mn, ClassNode cn);
 
     default String toLocation(int opIndex, String methodNode, MethodInsnNode min) {
         return ("Opcode:Method@" + methodNode + "@" + opIndex + " - " + min.owner + "." + min.name + "." + min.desc);

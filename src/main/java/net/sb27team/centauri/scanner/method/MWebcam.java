@@ -2,10 +2,7 @@ package net.sb27team.centauri.scanner.method;
 
 import net.sb27team.centauri.scanner.IMethodScanner;
 import net.sb27team.centauri.scanner.Scanner;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.List;
 public class MWebcam implements IMethodScanner {
 
     @Override
-    public Scanner.Threat scan(MethodNode mn) {
+    public Scanner.Threat scan(MethodNode mn, ClassNode cn) {
         List<String> methods = new ArrayList<>();
         int opIndex = 0;
         for (AbstractInsnNode ain : mn.instructions.toArray()) {
@@ -36,6 +33,6 @@ public class MWebcam implements IMethodScanner {
         if (methods.size() == 0) {
             return null;
         }
-        return new Scanner.Threat("OpenCV/Sarxos Webcam Call", "This class has methods that can access the webcam.", methods.toString());
+        return new Scanner.Threat("OpenCV/Sarxos Webcam Call", "This class has methods that can access the webcam.", cn, mn, methods.toString(), Scanner.Level.HIGH);
     }
 }

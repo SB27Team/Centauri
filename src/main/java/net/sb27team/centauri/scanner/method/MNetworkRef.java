@@ -2,10 +2,7 @@ package net.sb27team.centauri.scanner.method;
 
 import net.sb27team.centauri.scanner.IMethodScanner;
 import net.sb27team.centauri.scanner.Scanner;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class MNetworkRef implements IMethodScanner {
     @Override
-    public Scanner.Threat scan(MethodNode mn) {
+    public Scanner.Threat scan(MethodNode mn, ClassNode cn) {
         List<String> methods = new ArrayList<>();
         int opIndex = 0;
         for (AbstractInsnNode ain : mn.instructions.toArray()) {
@@ -34,7 +31,7 @@ public class MNetworkRef implements IMethodScanner {
         }
         if (methods.size() == 0)
             return null;
-        return new Scanner.Threat("Networking", "This class has online interactions.", mn, methods.toString());
+        return new Scanner.Threat("Networking", "This class has online interactions.", cn, mn, methods.toString());
     }
 
     private boolean isIP(String input) {

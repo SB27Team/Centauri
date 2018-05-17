@@ -13,22 +13,24 @@ import java.util.List;
 /**
  * @author LPK
  */
-public class MRuntime implements IMethodScanner {
+public class MNativeInterface implements IMethodScanner {
     @Override
     public Scanner.Threat scan(MethodNode mn, ClassNode cn) {
+        // Scan method for JNI..
         List<String> methods = new ArrayList<>();
         int opIndex = 0;
         for (AbstractInsnNode ain : mn.instructions.toArray()) {
             if (ain.getType() == AbstractInsnNode.METHOD_INSN) {
                 MethodInsnNode min = (MethodInsnNode) ain;
                 // Sun's windows registry implementation and a third party's
-                if (min.owner.equals("java/lang/Runtime"))
+                if (min.owner.startsWith("com/sun/jna") || min.owner.startsWith("org/xvolks/jnative"))
                     methods.add(toLocation(opIndex, mn.name, min));
             }
+            // TODO: Anything else?
             opIndex++;
         }
         if (methods.size() == 0)
             return null;
-        return new Scanner.Threat("Runtime call", "This method uses the Runtime class, which can be used for running external programs, gathering information about the executing machine, and modifying how the program closes (Such as prevention)", cn, mn, methods.toString());
+        return new Scanner.Threat("JNI/JNA Library", "This class can interact with non-java binaries.", cn, mn, methods.toString(), Scanner.Level.HIGH);
     }
 }

@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import net.sb27team.centauri.scanner.resource.ResourceManager;
+import net.sb27team.centauri.resource.ResourceManager;
 
 public class Main extends Application {
 

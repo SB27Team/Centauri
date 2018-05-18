@@ -1,4 +1,4 @@
-package net.sb27team.centauri.scanner.resource;
+package net.sb27team.centauri.resource;
 
 import javafx.scene.image.Image;
 

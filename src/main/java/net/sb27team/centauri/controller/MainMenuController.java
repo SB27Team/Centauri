@@ -1,12 +1,18 @@
 package net.sb27team.centauri.controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import net.sb27team.centauri.Centauri;
+import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.scanner.resource.ResourceManager;
 
@@ -20,7 +26,7 @@ public class MainMenuController {
     public static MainMenuController INSTANCE = new MainMenuController();
 
     @FXML
-    private TreeView<String> resourceTree;
+    private TreeView<ResourceItem> resourceTree;
     @FXML
     private Label rightStatus;
     @FXML
@@ -75,7 +81,7 @@ public class MainMenuController {
             packageEntryMap.get(parent).add(zipEntry);
         }
 
-        TreeItem<String> rootItem = new TreeItem<>(Centauri.INSTANCE.getOpenedFile().getName(), new ImageView(ResourceManager.FOLDER_ICON));
+        TreeItem<ResourceItem> rootItem = new TreeItem<>(new ResourceItem(Centauri.INSTANCE.getOpenedFile().getName()), new ImageView(ResourceManager.FOLDER_ICON));
 
 //        for (Map.Entry<String, List<ZipEntry>> stringListEntry : packageEntryMap.entrySet()) {
 //
@@ -98,20 +104,33 @@ public class MainMenuController {
         }).forEach(entry -> {
             if (entry.getKey() == null) {
                 for (ZipEntry zipEntry : entry.getValue()) {
-                    rootItem.getChildren().add(new TreeItem<>(new File(zipEntry.getName()).getName(), new ImageView(ResourceManager.getIconForName(zipEntry.getName()))));
+                    TreeItem<ResourceItem> item = new TreeItem<>(new ResourceItem(new File(zipEntry.getName()).getName(), zipEntry), new ImageView(ResourceManager.getIconForName(zipEntry.getName())));
+                    rootItem.getChildren().add(item);
                 }
             } else {
-                TreeItem<String> pack = new TreeItem<>(entry.getKey().replace('\\', '.').replace('/', '.'), new ImageView(ResourceManager.FOLDER_ICON));
+                TreeItem<ResourceItem> pack = new TreeItem<>(new ResourceItem(entry.getKey().replace('\\', '.').replace('/', '.')), new ImageView(ResourceManager.FOLDER_ICON));
 
                 for (ZipEntry zipEntry : entry.getValue()) {
-                    pack.getChildren().add(new TreeItem<>(new File(zipEntry.getName()).getName(), new ImageView(ResourceManager.getIconForName(zipEntry.getName()))));
+                    TreeItem<ResourceItem> item = new TreeItem<>(new ResourceItem(new File(zipEntry.getName()).getName(), zipEntry), new ImageView(ResourceManager.getIconForName(zipEntry.getName())));
+                    pack.getChildren().add(item);
                 }
 
                 rootItem.getChildren().add(pack);
             }
         });
+        EventHandler<MouseEvent> mouseEventHandle = this::handleMouseClicked;
+        resourceTree.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
 
         resourceTree.setRoot(rootItem);
+    }
+
+    private void handleMouseClicked(MouseEvent event) {
+        Node node = event.getPickResult().getIntersectedNode();
+        // Accept clicks only on node cells, and not on empty spaces of the TreeView
+        if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+            TreeItem<ResourceItem> name = resourceTree.getSelectionModel().getSelectedItem();
+            System.out.println("Node click: " + name.getValue().getEntry().getName());
+        }
     }
 
 }

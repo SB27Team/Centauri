@@ -1,14 +1,23 @@
 package net.sb27team.centauri.controller;
 
+import com.google.gson.JsonObject;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import javafx.scene.web.WebView;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.controller.utils.Utils;
-import net.sb27team.centauri.scanner.resource.ResourceManager;
+import net.sb27team.centauri.resource.ResourceManager;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +29,8 @@ public class MainMenuController {
     public static MainMenuController INSTANCE = new MainMenuController();
 
     @FXML
+    public WebView homeWV;
+    @FXML
     private TreeView<String> resourceTree;
     @FXML
     private Label rightStatus;
@@ -29,6 +40,29 @@ public class MainMenuController {
 
     public void initialize() {
         INSTANCE = this;
+        homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Loading...</h1></body></html>", "text/html");
+        new Thread(() -> {
+            try {
+                HttpClient client = HttpClients.createDefault();
+
+                HttpGet get = new HttpGet("https://raw.githubusercontent.com/SB27Team/Centauri/master/README.md");
+                String md = IOUtils.toString(client.execute(get).getEntity().getContent());
+
+                HttpPost post = new HttpPost("https://api.github.com/markdown");
+                JsonObject json = new JsonObject();
+                json.addProperty("text", md);
+                json.addProperty("mode", "gfm");
+                json.addProperty("context", "github/gollum");
+                post.setEntity(new StringEntity(json.toString()));
+                String html = IOUtils.toString(client.execute(post).getEntity().getContent());
+                Platform.runLater(() ->
+                        homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34); font-family: Arial, Helvetica, sans-serif; color: white;\">" + html + "</body></html>", "text/html"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() ->
+                        homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Failed to load the home page!</h1></body></html>", "text/html"));
+            }
+        }, "Web Loader").start();
     }
 
     @FXML
@@ -91,7 +125,7 @@ public class MainMenuController {
             if (obj2 == null) {
                 return -1;
             }
-            if (obj1.equals( obj2 )) {
+            if (obj1.equals(obj2)) {
                 return 0;
             }
             return obj1.compareTo(obj2);

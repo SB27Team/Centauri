@@ -1,4 +1,20 @@
 # Centauri
+Java reverse engineer program, supporting multiple decompilers, editing bytecode and more
+
+## Features
+- Flat dark GUI
+- Editing Bytecode (WIP)
+- Code scanner (WIP)
+- MCP Mappings support (WIP)
+- Find classes, string, regex, resource (WIP)
+- Built-in sandbox with x64 debugger (WIP)
+
+## Decompilers
+- FernFlower (WIP)
+- Procyon (WIP)
+
+more coming soon!
+
 ## Credits
 ### Icons
 #### Libraries:

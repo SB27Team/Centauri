@@ -24,11 +24,11 @@
     -fx-background-radius: 0;
 }
 
-.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator, .button {
     -fx-border-radius: 0;
 }
 
-.menu-item:hover, .tree-cell:selected, .tab:focused, .tab:hover {
+.menu-item:hover, .tree-cell:selected, .tab:focused, .tab:hover, .combo-box-popup .list-view:hover, .button:hover {
     -fx-background-color: rgb(0, 150, 201);
     -fx-border-style: none;
 }
@@ -62,4 +62,38 @@
     -fx-background-color: derive(black, 90.0%);
     -fx-background-insets: 2.0, 0.0, 0.0;
     -fx-background-radius: 2.0em;
+}
+
+.table-view, .table-row-cell {
+    -fx-background-color: rgb(34, 34, 34);
+}
+
+.table-view .column-header-background, .table-view .filler {
+    -fx-background-color: rgb(31, 31, 31);
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white;
+}
+
+.table-row-cell {
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.tree-cell {
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: rgb(38, 38, 38);
+}
+
+.button {
+    -fx-background-color: rgb(38, 38, 38);
+    -fx-text-fill: white;
 }

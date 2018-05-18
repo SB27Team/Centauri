@@ -4,14 +4,20 @@ import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import net.sb27team.centauri.Centauri;
+import net.sb27team.centauri.Main;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.resource.ResourceManager;
+import net.sb27team.centauri.scanner.Scanner;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -20,6 +26,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +70,25 @@ public class MainMenuController {
                         homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Failed to load the home page!</h1></body></html>", "text/html"));
             }
         }, "Web Loader").start();
+    }
+
+    @FXML
+    public void scannerMenuItemClicked(ActionEvent e) {
+        if (Centauri.INSTANCE.getOpenedFile() != null) {
+            try {
+                Parent root = FXMLLoader.load(Main.class.getResource("/gui/scanner.fxml"));
+                Scene scene = new Scene(root, 500, 300);
+                Stage stage = new Stage();
+                stage.setTitle("Scanner");
+                stage.setScene(scene);
+                stage.getIcons().add(ResourceManager.CENTAURI_ICON);
+                stage.show();
+                new Thread(() ->
+                        ScannerController.INSTANCE.setData(new Scanner(Centauri.INSTANCE.getOpenedFile()).runScan())).start();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
     @FXML

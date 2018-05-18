@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import net.sb27team.centauri.controller.utils.Utils;
 
+import java.io.File;
 import java.io.InputStream;
 
 /*
@@ -13,7 +14,7 @@ import java.io.InputStream;
  */
 public class ImageEditor implements IEditor {
     @Override
-    public void open(InputStream stream, Tab tab) {
+    public void open(File file, InputStream stream, Tab tab) {
         try {
             ScrollPane pane = new ScrollPane();
             Image image = new Image(stream);

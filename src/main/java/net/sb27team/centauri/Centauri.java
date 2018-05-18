@@ -67,18 +67,22 @@ public class Centauri {
         String mimetype = new MimetypesFileTypeMap().getContentType(f);
         String type = mimetype.split("/")[0];
 
+        String ext = "";
+        if (f.getName().lastIndexOf(".") != -1)
+            ext = f.getName().substring(f.getName().lastIndexOf(".") + 1, f.getName().length()).toLowerCase();
+
         System.out.println(type);
 
         List<IEditor> compatEditors = Utils.getSupportedEditors(type, f.getName());
-        String editor = config.get("types." + type + ".default", compatEditors.get(0).name());
+        String editor = config.get("exts." + ext + ".default", compatEditors.get(0).name());
         try {
             compatEditors.stream().filter(e -> editor.equals(e.name())).findFirst()
                     .orElseThrow(() -> {
-                        config.set("types." + type + ".default", compatEditors.get(0).name());
+                        config.set("exts." + type + ".default", compatEditors.get(0).name());
                         label.setText("Editor for this file was not found.");
                         return new IllegalStateException("Default editor not found");
                     })
-                    .open(getInputStream(res.getEntry()), tab);
+                    .open(f, getInputStream(res.getEntry()), tab);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package net.sb27team.centauri.editors;
 
 import javafx.scene.control.Tab;
 
+import java.io.File;
 import java.io.InputStream;
 
 /*
@@ -10,7 +11,7 @@ import java.io.InputStream;
 public class HexEditor implements IEditor {
 
     @Override
-    public void open(InputStream stream, Tab tab) {
+    public void open(File file, InputStream stream, Tab tab) {
 
     }
 

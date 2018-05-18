@@ -19,4 +19,12 @@ public class Utils {
         return f;
     }
 
+    public static boolean isImage(String name) {
+        if (name.lastIndexOf(".") == -1)
+            return false;
+        String str = name.substring(name.lastIndexOf(".") + 1, name.length()).toLowerCase();
+        System.out.println(str);
+
+        return str.equals("png") || str.equals("bmp") || str.equals("jpg") || str.equals("jpeg") || str.equals("gif");
+    }
 }

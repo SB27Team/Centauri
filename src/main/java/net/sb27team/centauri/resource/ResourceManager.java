@@ -14,6 +14,7 @@ public class ResourceManager {
     public static Image XML_ICON;
     private static Image JSON_ICON;
     private static Image LIBRARY_ICON;
+    public static Image ANIMATED_LOADING_ICON;
 
     private static HashMap<String, Image> resourceFileSuffixMap = new HashMap<>();
 
@@ -26,6 +27,7 @@ public class ResourceManager {
         XML_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/xml.png"));
         JSON_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/json.png"));
         LIBRARY_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/books.png"));
+        ANIMATED_LOADING_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/loading.gif"));
 
         resourceFileSuffixMap.put("java", JAVA_ICON);
         resourceFileSuffixMap.put("class", JAVA_ICON);

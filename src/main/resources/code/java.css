@@ -1,0 +1,24 @@
+.keyword {
+    -fx-fill: #348cd6;
+    -fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: #d4d4d4;
+}
+.bracket {
+    -fx-fill: #d4d4d4;
+}
+.brace {
+    -fx-fill: #d4d4d4;
+}
+.string {
+    -fx-fill: #ce9178;
+}
+
+.comment {
+	-fx-fill: #608b4e;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #191919;
+}

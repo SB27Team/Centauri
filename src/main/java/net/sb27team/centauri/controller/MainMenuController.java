@@ -1,5 +1,6 @@
 package net.sb27team.centauri.controller;
 
+import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,10 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -23,8 +21,12 @@ import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
-import net.sb27team.centauri.scanner.resource.ResourceManager;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,9 +37,10 @@ import java.util.zip.ZipEntry;
 
 public class MainMenuController {
     public static MainMenuController INSTANCE = new MainMenuController();
-
     @FXML
-    public WebView homeWV;
+    private TabPane tabPane;
+    @FXML
+    private WebView homeWV;
     @FXML
     private TreeView<ResourceItem> resourceTree;
     @FXML
@@ -117,6 +120,8 @@ public class MainMenuController {
     }
 
     public void updateTree() {
+        tabPane.getTabs().clear();
+
         if (Centauri.INSTANCE.getOpenedFile() == null) {
             resourceTree.setRoot(null);
             return;
@@ -183,7 +188,21 @@ public class MainMenuController {
         // Accept clicks only on node cells, and not on empty spaces of the TreeView
         if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
             TreeItem<ResourceItem> name = resourceTree.getSelectionModel().getSelectedItem();
-            System.out.println("Node click: " + name.getValue().getEntry().getName());
+            if (!name.getValue().isDirectory()) {
+                System.out.println("Node click: " + name.getValue().getEntry().getName());
+                openOrSwitchToTab(name.getValue());
+            }
+        }
+    }
+
+    private void openOrSwitchToTab(ResourceItem res) {
+        if (Centauri.INSTANCE.resourceTabMap.containsKey(res)) {
+            tabPane.getSelectionModel().select(Centauri.INSTANCE.resourceTabMap.get(res));
+        } else {
+            Tab tab = Centauri.INSTANCE.openTab(res);
+
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().select(tab);
         }
     }
 }

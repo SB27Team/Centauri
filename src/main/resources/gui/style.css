@@ -97,3 +97,9 @@
     -fx-background-color: rgb(38, 38, 38);
     -fx-text-fill: white;
 }
+.tree-cell > .tree-disclosure-node > .arrow  {
+    -fx-background-color: white;
+}
+.tree-cell:expanded > .tree-disclosure-node > .arrow {
+    -fx-background-color: white;
+}

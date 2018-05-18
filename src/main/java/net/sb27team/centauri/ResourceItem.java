@@ -1,5 +1,6 @@
 package net.sb27team.centauri;
 
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 
 public class ResourceItem {
@@ -32,5 +33,22 @@ public class ResourceItem {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ResourceItem that = (ResourceItem) o;
+
+        return Objects.equals(name, that.name) &&
+                Objects.equals(entry, that.entry);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, entry);
     }
 }

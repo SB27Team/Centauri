@@ -18,9 +18,9 @@ public class ScannerController {
     public static ScannerController INSTANCE = new ScannerController();
 
     @FXML
-    public TableView table;
+    public TableView<Scanner.Threat> table;
     @FXML
-    public TableColumn level;
+    public TableColumn<Object, Object> level;
     @FXML
     public TableColumn name;
     @FXML

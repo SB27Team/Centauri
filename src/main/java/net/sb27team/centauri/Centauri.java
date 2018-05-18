@@ -1,15 +1,14 @@
 package net.sb27team.centauri;
 
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Configuration;
 
@@ -58,35 +57,31 @@ public class Centauri {
     }
 
     private void addContent(ResourceItem res, Tab tab) {
-        {
-            Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
-            label.setTextAlignment(TextAlignment.CENTER);
-            label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
-            tab.setContent(label);
-        }
+
+        Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
+        tab.setContent(label);
+
         File f = new File(res.getEntry().getName());
         String mimetype = new MimetypesFileTypeMap().getContentType(f);
         String type = mimetype.split("/")[0];
 
         System.out.println(type);
 
-        if (type.equals("image") || Utils.isImage(res.getEntry().getName())) {
-            try {
-                ScrollPane pane = new ScrollPane();
-                Image image = new Image(getInputStream(res));
-                pane.setContent(new ImageView(image));
-                tab.setContent(pane);
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        List<IEditor> compatEditors = Utils.getSupportedEditors(type, f.getName());
+        String editor = config.get("types." + type + ".default", compatEditors.get(0).name());
+        try {
+            compatEditors.stream().filter(e -> editor.equals(e.name())).findFirst()
+                    .orElseThrow(() -> {
+                        config.set("types." + type + ".default", compatEditors.get(0).name());
+                        label.setText("Editor for this file was not found.");
+                        return new IllegalStateException("Default editor not found");
+                    })
+                    .open(getInputStream(res.getEntry()), tab);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        Label label = new Label("No preview available :o");
-        label.setTextAlignment(TextAlignment.CENTER);
-        label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
-
-        tab.setContent(label);
     }
 
     public InputStream getInputStream(ResourceItem res) throws IOException {

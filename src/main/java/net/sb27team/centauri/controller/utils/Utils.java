@@ -2,10 +2,20 @@ package net.sb27team.centauri.controller.utils;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import net.sb27team.centauri.editors.HexEditor;
+import net.sb27team.centauri.editors.IEditor;
+import net.sb27team.centauri.editors.ImageEditor;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Utils {
+    private static List<IEditor> editors = Arrays.asList(
+            new ImageEditor(),
+            new HexEditor() // should be the last one
+    );
 
     public static File openFileDialog(Window window) {
         FileChooser chooser = new FileChooser();
@@ -26,5 +36,9 @@ public class Utils {
         System.out.println(str);
 
         return str.equals("png") || str.equals("bmp") || str.equals("jpg") || str.equals("jpeg") || str.equals("gif");
+    }
+
+    public static List<IEditor> getSupportedEditors(String type, String name) {
+        return editors.stream().filter(e -> e.supports(type, name)).collect(Collectors.toList());
     }
 }

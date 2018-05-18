@@ -11,6 +11,7 @@ import javafx.scene.text.TextAlignment;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.resource.ResourceManager;
+import net.sb27team.centauri.utils.Configuration;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
@@ -31,6 +32,7 @@ public class Centauri {
     private File openedFile = null;
     private List<ZipEntry> loadedZipEntries = new ArrayList<>();
     public HashMap<ResourceItem, Tab> resourceTabMap = new HashMap<>();
+    private Configuration config = new Configuration();
 
     static {
         ConsoleHandler handler = new ConsoleHandler();
@@ -98,6 +100,7 @@ public class Centauri {
     public void shutDown() {
         LOGGER.info("Shutting down...");
         closeFile();
+        config.save();
 //        System.exit(0);
     }
 

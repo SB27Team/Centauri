@@ -45,3 +45,21 @@
 .label, .tab-label {
     -fx-text-fill: WHITE;
 }
+
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-border-radius: 2.0em;
+}
+
+.scroll-bar .track {
+    -fx-background-color: TRANSPARENT;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: derive(black, 90.0%);
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
+}

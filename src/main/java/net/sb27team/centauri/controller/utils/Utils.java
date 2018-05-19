@@ -11,10 +11,7 @@ package net.sb27team.centauri.controller.utils;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import net.sb27team.centauri.editors.FFEditor;
-import net.sb27team.centauri.editors.HexEditor;
-import net.sb27team.centauri.editors.IEditor;
-import net.sb27team.centauri.editors.ImageEditor;
+import net.sb27team.centauri.editors.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -23,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
     private static List<IEditor> editors = Arrays.asList(
+            new CFREditor(),
             new FFEditor(),
             new ImageEditor(),
             new HexEditor() // should be the last one

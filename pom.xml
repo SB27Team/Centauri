@@ -60,5 +60,12 @@
             <artifactId>rsyntaxtextarea</artifactId>
             <version>2.6.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.benf.cfr</groupId>
+            <artifactId>cfr</artifactId>
+            <version>129</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cfr_0_129.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

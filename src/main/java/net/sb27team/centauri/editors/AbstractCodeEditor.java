@@ -58,7 +58,16 @@ public abstract class AbstractCodeEditor implements IEditor {
         pane.getChildren().add(stopButton);
         tab.setContent(pane);
         Thread thread = new Thread(() -> {
-            String text = getContext(file, Centauri.INSTANCE.getOpenedFile());
+            String raw;
+            try {
+                raw = getContext(file, Centauri.INSTANCE.getOpenedFile());
+            } catch (IOException ex) {
+                raw = "Count not get Decompiled context: " + ex.getMessage();
+                System.err.println(raw);
+                ex.printStackTrace();
+            }
+            final String text = raw;
+
             Platform.runLater(() -> {
                 SwingNode sn = new SwingNode();
                 RSyntaxTextArea sta = new RSyntaxTextArea();
@@ -90,5 +99,5 @@ public abstract class AbstractCodeEditor implements IEditor {
 
     abstract String getSyntax();
 
-    abstract String getContext(FileComponent classFile, File jar);
+    abstract String getContext(FileComponent classFile, File jar) throws IOException;
 }

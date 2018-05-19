@@ -20,8 +20,9 @@ import java.util.stream.Collectors;
 
 public class Utils {
     private static List<IEditor> editors = Arrays.asList(
-            new CFREditor(),
             new FFEditor(),
+            new CFREditor(),
+            new ProcyonEditor(),
             new ImageEditor(),
             new HexEditor() // should be the last one
     );

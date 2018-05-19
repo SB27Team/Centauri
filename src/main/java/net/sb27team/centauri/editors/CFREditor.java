@@ -29,7 +29,6 @@ public class CFREditor extends AbstractCodeEditor {
 
     @Override
     String getContext(FileComponent classFile, File jar) throws IOException {
-        System.out.println("aaa");
         File temp = File.createTempFile("centauri", "_tmp.class");
         Files.write(temp.toPath(), ByteStreams.toByteArray(Centauri.INSTANCE.getInputStream(classFile)));
 

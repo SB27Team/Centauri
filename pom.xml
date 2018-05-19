@@ -60,12 +60,21 @@
             <artifactId>rsyntaxtextarea</artifactId>
             <version>2.6.1</version>
         </dependency>
+        <!-- http://www.benf.org/other/cfr/index.html -->
         <dependency>
             <groupId>org.benf.cfr</groupId>
             <artifactId>cfr</artifactId>
             <version>129</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/cfr_0_129.jar</systemPath>
+        </dependency>
+        <!-- Newest version: https://bitbucket.org/mstrobel/procyon/downloads/ -->
+        <dependency>
+            <groupId>com.strobel.decompiler</groupId>
+            <artifactId>procyon</artifactId>
+            <version>0.5.30</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/procyon-decompiler-0.5.30.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

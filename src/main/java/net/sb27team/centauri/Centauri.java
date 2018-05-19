@@ -20,6 +20,7 @@ import javafx.scene.text.TextAlignment;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.editors.IEditor;
+import net.sb27team.centauri.editors.ProcyonEditor;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Configuration;
@@ -97,8 +98,7 @@ public class Centauri {
                         config.set("exts." + type + ".default", compatEditors.get(0).name());
                         label.setText("Editor for this file was not found.");
                         return new IllegalStateException("Default editor not found");
-                    })
-                    .open(res, getInputStream(res.getZipEntry()), tab);
+                    }).open(res, getInputStream(res.getZipEntry()), tab);
         } catch (Exception e) {
             e.printStackTrace();
         }

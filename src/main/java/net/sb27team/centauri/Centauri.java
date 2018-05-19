@@ -1,5 +1,6 @@
 package net.sb27team.centauri;
 
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
@@ -43,6 +44,8 @@ public class Centauri {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> INSTANCE.shutDown()));
 //        LOGGER.setFilter(record -> DEBUG || record.getLevel().intValue() >= Level.INFO.intValue());
     }
+
+    private List<Thread> threads = new ArrayList<>();
 
     public Tab openTab(ResourceItem res) {
         Tab tab = new Tab(res.getName().length() > 16 ? res.getName().substring(0, 16) + "..." : res.getName());
@@ -99,6 +102,10 @@ public class Centauri {
     public void shutDown() {
         LOGGER.info("Shutting down...");
         closeFile();
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
+        threads.clear();
         config.save();
 //        System.exit(0);
     }
@@ -122,7 +129,7 @@ public class Centauri {
         if (loadedZipEntries != null) {
             loadedZipEntries.clear();
         }
-        MainMenuController.INSTANCE.updateTree();
+        Platform.runLater(() -> MainMenuController.INSTANCE.updateTree());
     }
 
     public void openFile(File file) {
@@ -172,5 +179,9 @@ public class Centauri {
 
     public File getOpenedFile() {
         return openedFile;
+    }
+
+    public void addThread(Thread thread) {
+        threads.add(thread);
     }
 }

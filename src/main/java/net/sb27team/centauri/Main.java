@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import net.sb27team.centauri.resource.ResourceManager;
 
 public class Main extends Application {
@@ -19,6 +20,9 @@ public class Main extends Application {
 
         stage.setTitle("Centauri");
         stage.setScene(scene);
+        stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e ->  {
+            System.exit(0);
+        });
         stage.getIcons().add(ResourceManager.CENTAURI_ICON);
         stage.show();
     }

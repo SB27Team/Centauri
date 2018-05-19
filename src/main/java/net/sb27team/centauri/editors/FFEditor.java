@@ -1,6 +1,7 @@
 package net.sb27team.centauri.editors;
 
 import com.google.common.io.ByteStreams;
+import javafx.application.Platform;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.MainMenuController;
@@ -35,9 +36,10 @@ public class FFEditor extends AbstractCodeEditor {
 //            File outputFile = File.createTempFile("centauri", "_output.class");
             Files.write(tmpFile.toPath(), ByteStreams.toByteArray(Centauri.INSTANCE.getInputStream(classFile)));
             // System.out.println(tmpFile.getName());
-            MainMenuController.INSTANCE.setStatus("Decompiling "+classFile+"...");
+//            MainMenuController.INSTANCE.setStatus("Decompiling "+classFile+"...");
+            Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Decompiling "+classFile+"..."));
             DecompilationResult result = decompiler.decompileClassFile(jar.toPath(), tmpFile.toPath(), Paths.get(System.getProperty("java.io.tmpdir")));
-            MainMenuController.INSTANCE.setStatus("Ready");
+            Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Ready"));
 //            for (DecompilationFailure decompilationFailure : result.getFailures()) {
 //                System.out.println(decompilationFailure.getPath() + "/" + decompilationFailure.getMessage());
 //            }

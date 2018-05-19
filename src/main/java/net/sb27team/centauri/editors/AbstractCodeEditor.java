@@ -1,5 +1,7 @@
 package net.sb27team.centauri.editors;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.control.Tab;
 import net.sb27team.centauri.Centauri;
@@ -30,16 +32,26 @@ public abstract class AbstractCodeEditor implements IEditor {
 
     @Override
     public void open(ResourceItem file, InputStream stream, Tab tab) {
-        SwingNode sn = new SwingNode();
-        RSyntaxTextArea sta = new RSyntaxTextArea();
-        sta.setEditable(false);
-        sta.setText(getContext(file, Centauri.INSTANCE.getOpenedFile()));
-        sta.setSyntaxEditingStyle(getSyntax());
-        sta.setFont(new Font("Consolas", Font.PLAIN, 14));
-        if(theme != null)
-            theme.apply(sta);
-        sn.setContent(new RTextScrollPane(sta));
-        tab.setContent(sn);
+        Platform.setImplicitExit(false);
+        Thread thread = new Thread(() -> {
+            String text = getContext(file, Centauri.INSTANCE.getOpenedFile());
+            Platform.runLater(() -> {
+                SwingNode sn = new SwingNode();
+                RSyntaxTextArea sta = new RSyntaxTextArea();
+                sta.setEditable(false);
+                sta.setText(text);
+                sta.setSyntaxEditingStyle(getSyntax());
+                sta.setFont(new Font("Consolas", Font.PLAIN, 14));
+
+                if (theme != null)
+                    theme.apply(sta);
+
+                sn.setContent(new RTextScrollPane(sta));
+                tab.setContent(sn);
+            });
+        });
+        Centauri.INSTANCE.addThread(thread);
+        thread.start();
     }
 
     abstract String getSyntax();

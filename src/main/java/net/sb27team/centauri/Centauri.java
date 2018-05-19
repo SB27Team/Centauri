@@ -20,6 +20,7 @@ import javafx.scene.text.TextAlignment;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.editors.IEditor;
+import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Configuration;
 
@@ -41,7 +42,7 @@ public class Centauri {
     private ZipFile openedZipFile = null;
     private File openedFile = null;
     private List<ZipEntry> loadedZipEntries = new ArrayList<>();
-    public HashMap<ResourceItem, Tab> resourceTabMap = new HashMap<>();
+    public HashMap<FileComponent, Tab> resourceTabMap = new HashMap<>();
     private Configuration config = new Configuration();
 
     static {
@@ -57,7 +58,7 @@ public class Centauri {
 
     private List<Thread> threads = new ArrayList<>();
 
-    public Tab openTab(ResourceItem res) {
+    public Tab openTab(FileComponent res) {
         Tab tab = new Tab(res.getName().length() > 16 ? res.getName().substring(0, 16) + "..." : res.getName());
 
 //        Label label = new Label()
@@ -71,7 +72,7 @@ public class Centauri {
         return tab;
     }
 
-    private void addContent(ResourceItem res, Tab tab) {
+    private void addContent(FileComponent res, Tab tab) {
         StackPane pane = new StackPane();
         Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
         label.setTextAlignment(TextAlignment.CENTER);
@@ -79,7 +80,7 @@ public class Centauri {
         pane.getChildren().add(label);
         tab.setContent(pane);
 
-        File f = new File(res.getEntry().getName());
+        File f = new File(res.getZipEntry().getName());
         String mimetype = new MimetypesFileTypeMap().getContentType(f);
         String type = mimetype.split("/")[0];
 
@@ -97,14 +98,14 @@ public class Centauri {
                         label.setText("Editor for this file was not found.");
                         return new IllegalStateException("Default editor not found");
                     })
-                    .open(res, getInputStream(res.getEntry()), tab);
+                    .open(res, getInputStream(res.getZipEntry()), tab);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public InputStream getInputStream(ResourceItem res) throws IOException {
-        return getInputStream(res.getEntry());
+    public InputStream getInputStream(FileComponent res) throws IOException {
+        return getInputStream(res.getZipEntry());
     }
 
     public InputStream getInputStream(ZipEntry entry) throws IOException {
@@ -163,7 +164,6 @@ public class Centauri {
 
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-
                 this.loadedZipEntries.add(entry);
             }
 

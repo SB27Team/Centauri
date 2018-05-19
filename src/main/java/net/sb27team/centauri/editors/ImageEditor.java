@@ -13,8 +13,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.explorer.FileComponent;
 
 import java.io.InputStream;
 
@@ -22,8 +22,9 @@ import java.io.InputStream;
  * Created by Cubxity on 18/05/2018
  */
 public class ImageEditor implements IEditor {
+
     @Override
-    public void open(ResourceItem file, InputStream stream, Tab tab) {
+    public void open(FileComponent file, InputStream stream, Tab tab) {
         try {
             ScrollPane pane = new ScrollPane();
             Image image = new Image(stream);

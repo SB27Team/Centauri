@@ -21,7 +21,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
-import net.sb27team.centauri.ResourceItem;
+import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
@@ -47,10 +47,10 @@ public abstract class AbstractCodeEditor implements IEditor {
     }
 
     @Override
-    public void open(ResourceItem file, InputStream stream, Tab tab) {
+    public void open(FileComponent file, InputStream stream, Tab tab) {
         Platform.setImplicitExit(false);
         FlowPane pane = new FlowPane();
-        javafx.scene.control.Label label = new Label("DECOMPILING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
+        Label label = new Label("DECOMPILING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
         label.setTextAlignment(TextAlignment.CENTER);
         label.setFont(javafx.scene.text.Font.font("Roboto", FontWeight.BOLD, 20));
         pane.getChildren().add(label);
@@ -90,5 +90,5 @@ public abstract class AbstractCodeEditor implements IEditor {
 
     abstract String getSyntax();
 
-    abstract String getContext(ResourceItem classFile, File jar);
+    abstract String getContext(FileComponent classFile, File jar);
 }

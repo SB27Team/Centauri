@@ -12,8 +12,8 @@ package net.sb27team.centauri.editors;
 import com.google.common.io.ByteStreams;
 import javafx.application.Platform;
 import net.sb27team.centauri.Centauri;
-import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.MainMenuController;
+import net.sb27team.centauri.explorer.FileComponent;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.jboss.windup.decompiler.api.DecompilationResult;
 import org.jboss.windup.decompiler.fernflower.FernflowerDecompiler;
@@ -36,7 +36,7 @@ public class FFEditor extends AbstractCodeEditor {
     }
 
     @Override
-    String getContext(ResourceItem classFile, File jar) {
+    String getContext(FileComponent classFile, File jar) {
         File tmpFile;
         try {
             tmpFile = File.createTempFile("centauri", "_tmp.class");

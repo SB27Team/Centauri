@@ -54,13 +54,14 @@
         <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0">
           <children>
             <TreeView fx:id="resourceTree" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <contextMenu>
-                        <ContextMenu fx:id="contextMenu">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Decompile with..." />
-                          </items>
-                        </ContextMenu>
-                     </contextMenu></TreeView>
+               <contextMenu>
+                  <ContextMenu fx:id="contextMenu">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Decompile with..." />
+                    </items>
+                  </ContextMenu>
+               </contextMenu>
+            </TreeView>
             <!--<TreeView layoutX="0.0" layoutY="0.0" prefHeight="553.0" prefWidth="200.0" />-->
           </children>
         </AnchorPane>

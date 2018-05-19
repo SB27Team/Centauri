@@ -18,6 +18,7 @@ public class ResourceManager {
     public static Image JAVA_ICON;
     public static Image FOLDER_ICON;
     public static Image FILE_ICON;
+    public static Image HOME_ICON;
     public static Image CENTAURI_ICON;
     public static Image IMAGE_ICON;
     public static Image XML_ICON;
@@ -33,6 +34,7 @@ public class ResourceManager {
         JAVA_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/java.png"));
         FOLDER_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/folder.png"));
         FILE_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/file.png"));
+        HOME_ICON = new Image("/icons/home.png");
         IMAGE_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/picture.png"));
         XML_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/xml.png"));
         JSON_ICON = new Image(ResourceManager.class.getResourceAsStream("/icons/json.png"));

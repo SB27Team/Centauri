@@ -30,8 +30,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
-import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
 import org.apache.commons.io.IOUtils;
@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.zip.ZipEntry;
 
@@ -59,17 +60,36 @@ public class MainMenuController {
     @FXML
     private WebView homeWV;
     @FXML
-    private TreeView<ResourceItem> resourceTree;
+    private TreeView<ExplorerItem> resourceTree = new TreeView<>();
     @FXML
     private Label rightStatus;
     @FXML
     private Label leftStatus;
+
+    private FileExplorer fileExplorer;
 
 
     public void initialize() {
         INSTANCE = this;
         root.setOnDragOver(e -> {
             e.acceptTransferModes(TransferMode.COPY);
+        });
+        resourceTree.setCellFactory(treeView -> {
+            TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>(){
+                @Override
+                protected void updateItem(ExplorerItem obj, boolean empty) {
+                    super.updateItem(obj, empty);
+                    setText(empty ? null : obj.getName());
+                    if (!empty && obj.getName() != null && getTreeItem() != null) {
+                        if (obj.isHome()) {
+                            setGraphic(new ImageView(ResourceManager.HOME_ICON));
+                        } else if (obj.getComponent() instanceof Directory) {
+                            setGraphic(new ImageView(ResourceManager.FOLDER_ICON));
+                        } else setGraphic(new ImageView(ResourceManager.getIconForName(obj.getName())));
+                    } else setGraphic(null);
+                }
+            };
+            return cell;
         });
         homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Loading...</h1></body></html>", "text/html");
         new Thread(() -> {
@@ -159,65 +179,11 @@ public class MainMenuController {
             return;
         }
 
-        HashMap<String, List<ZipEntry>> packageEntryMap = new HashMap<>();
+        fileExplorer = new FileExplorer(new HashSet<>(Centauri.INSTANCE.getLoadedZipEntries()), Centauri.INSTANCE.getOpenedFile().getName(), "/");
+        resourceTree.setRoot(fileExplorer.getMain());
 
-        for (ZipEntry zipEntry : Centauri.INSTANCE.getLoadedZipEntries()) {
-            if (zipEntry.isDirectory()) {
-                continue;
-            }
-            String parent = new File(zipEntry.getName()).getParent();
-
-            if (!packageEntryMap.containsKey(parent)) {
-                packageEntryMap.put(parent, new ArrayList<>());
-            }
-            packageEntryMap.get(parent).add(zipEntry);
-        }
-
-        TreeItem<ResourceItem> rootItem = new TreeItem<>(new ResourceItem(Centauri.INSTANCE.getOpenedFile().getName()), new ImageView(ResourceManager.FOLDER_ICON));
-
-//        for (Map.Entry<String, List<ZipEntry>> stringListEntry : packageEntryMap.entrySet()) {
-//
-//
-//        }
-        packageEntryMap.entrySet().stream().sorted((o1, o2) -> {
-            String obj1 = o1.getKey();
-            String obj2 = o2.getKey();
-
-            if (obj1 == null) {
-                return 1;
-            }
-            if (obj2 == null) {
-                return -1;
-            }
-            if (obj1.equals( obj2 )) {
-                return 0;
-            }
-            return obj1.compareTo(obj2);
-        }).forEach(entry -> {
-            if (entry.getKey() == null) {
-                for (ZipEntry zipEntry : entry.getValue()) {
-                    TreeItem<ResourceItem> item = new TreeItem<>(new ResourceItem(new File(zipEntry.getName()).getName(), zipEntry), new ImageView(ResourceManager.getIconForName(zipEntry.getName())));
-                    rootItem.getChildren().add(item);
-                }
-            } else {
-                TreeItem<ResourceItem> pack = new TreeItem<>(new ResourceItem(entry.getKey().replace('\\', '.').replace('/', '.')), new ImageView(ResourceManager.FOLDER_ICON));
-
-                for (ZipEntry zipEntry : entry.getValue()) {
-                    TreeItem<ResourceItem> item = new TreeItem<>(new ResourceItem(new File(zipEntry.getName()).getName(), zipEntry), new ImageView(ResourceManager.getIconForName(zipEntry.getName())));
-//                    item.set
-                    pack.getChildren().add(item);
-                }
-
-                rootItem.getChildren().add(pack);
-            }
-        });
         EventHandler<MouseEvent> mouseEventHandle = this::handleMouseClicked;
         resourceTree.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
-
-        resourceTree.setRoot(rootItem);
-
-        // Removes old tree items to keep the memory usage low
-//        System.gc();
     }
 
     private void handleMouseClicked(MouseEvent event) {
@@ -226,15 +192,15 @@ public class MainMenuController {
         Node node = event.getPickResult().getIntersectedNode();
         // Accept clicks only on node cells, and not on empty spaces of the TreeView
         if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-            TreeItem<ResourceItem> name = resourceTree.getSelectionModel().getSelectedItem();
-            if (!name.getValue().isDirectory()) {
-                Centauri.LOGGER.fine("Node click: " + name.getValue().getEntry().getName());
-                openOrSwitchToTab(name.getValue());
+            Component component = resourceTree.getSelectionModel().getSelectedItem().getValue().getComponent();
+            if (component instanceof FileComponent) {
+                Centauri.LOGGER.fine("Node click: " + component.getName());
+                openOrSwitchToTab((FileComponent) component);
             }
         }
     }
 
-    private void openOrSwitchToTab(ResourceItem res) {
+    private void openOrSwitchToTab(FileComponent res) {
         if (Centauri.INSTANCE.resourceTabMap.containsKey(res)) {
             tabPane.getSelectionModel().select(Centauri.INSTANCE.resourceTabMap.get(res));
         } else {
@@ -243,5 +209,13 @@ public class MainMenuController {
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().select(tab);
         }
+    }
+
+    public FileExplorer getFileExplorer() {
+        return fileExplorer;
+    }
+
+    public void setFileExplorer(FileExplorer fileExplorer) {
+        this.fileExplorer = fileExplorer;
     }
 }

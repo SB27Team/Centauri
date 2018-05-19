@@ -1,5 +1,6 @@
 package net.sb27team.centauri.scanner;
 
+import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.scanner.classes.CBase64;
 import net.sb27team.centauri.scanner.classes.CClassLoader;
 import net.sb27team.centauri.scanner.classes.CSuspiciousSynth;
@@ -61,7 +62,7 @@ public class Scanner {
     public static void main(String[] args) {
         // For testing
         Scanner s = new Scanner(new File(args[0]));
-        s.runScan().forEach(t -> System.out.println("Threat: " + t.name + ": " + t.description + " loc: " + t.location + " LEVEL: " + t.level.name()));
+        s.runScan().forEach(t -> Centauri.LOGGER.finer("Threat: " + t.name + ": " + t.description + " loc: " + t.location + " LEVEL: " + t.level.name()));
     }
 
     public static class Threat {

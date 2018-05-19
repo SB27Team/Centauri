@@ -189,7 +189,7 @@ public class MainMenuController {
         if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
             TreeItem<ResourceItem> name = resourceTree.getSelectionModel().getSelectedItem();
             if (!name.getValue().isDirectory()) {
-                System.out.println("Node click: " + name.getValue().getEntry().getName());
+                Centauri.LOGGER.fine("Node click: " + name.getValue().getEntry().getName());
                 openOrSwitchToTab(name.getValue());
             }
         }

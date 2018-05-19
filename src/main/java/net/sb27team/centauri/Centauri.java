@@ -72,7 +72,6 @@ public class Centauri {
         if (f.getName().lastIndexOf(".") != -1)
             ext = f.getName().substring(f.getName().lastIndexOf(".") + 1, f.getName().length()).toLowerCase();
 
-        System.out.println(type);
 
         List<IEditor> compatEditors = Utils.getSupportedEditors(type, f.getName());
         String editor = config.get("exts." + ext + ".default", compatEditors.get(0).name());

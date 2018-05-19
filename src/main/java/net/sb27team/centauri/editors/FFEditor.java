@@ -34,13 +34,13 @@ public class FFEditor extends AbstractCodeEditor {
             tmpFile = File.createTempFile("centauri", "_tmp.class");
 //            File outputFile = File.createTempFile("centauri", "_output.class");
             Files.write(tmpFile.toPath(), ByteStreams.toByteArray(Centauri.INSTANCE.getInputStream(classFile)));
-            System.out.println(tmpFile.getName());
+            // System.out.println(tmpFile.getName());
             MainMenuController.INSTANCE.setStatus("Decompiling "+classFile+"...");
             DecompilationResult result = decompiler.decompileClassFile(jar.toPath(), tmpFile.toPath(), Paths.get("E:/tmp/centauri"));
             MainMenuController.INSTANCE.setStatus("Ready");
-            for (DecompilationFailure decompilationFailure : result.getFailures()) {
-                System.out.println(decompilationFailure.getPath() + "/" + decompilationFailure.getMessage());
-            }
+//            for (DecompilationFailure decompilationFailure : result.getFailures()) {
+//                System.out.println(decompilationFailure.getPath() + "/" + decompilationFailure.getMessage());
+//            }
             tmpFile.deleteOnExit();
             return result.getFailures().isEmpty() ? new String(Files.readAllBytes(Paths.get(new ArrayList<>(result.getDecompiledFiles().values()).get(0)))) : "Error: " + result.getFailures().get(0).getMessage();
         } catch (IOException e) {

@@ -11,7 +11,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -38,6 +42,10 @@ import java.util.zip.ZipEntry;
 public class MainMenuController {
     public static MainMenuController INSTANCE = new MainMenuController();
     @FXML
+    private VBox root;
+    @FXML
+    private ContextMenu contextMenu;
+    @FXML
     private TabPane tabPane;
     @FXML
     private WebView homeWV;
@@ -51,6 +59,9 @@ public class MainMenuController {
 
     public void initialize() {
         INSTANCE = this;
+        root.setOnDragOver(e -> {
+            e.acceptTransferModes(TransferMode.COPY);
+        });
         homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Loading...</h1></body></html>", "text/html");
         new Thread(() -> {
             try {
@@ -74,6 +85,17 @@ public class MainMenuController {
                         homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Failed to load the home page!</h1></body></html>", "text/html"));
             }
         }, "Web Loader").start();
+    }
+    @FXML
+    public void onDrag(DragEvent e) {
+        if (e.getDragboard().hasFiles()) {
+            List<File> files = e.getDragboard().getFiles();
+
+            if (files.size() > 0) {
+                Centauri.INSTANCE.openFile(files.get(0));
+                e.setDropCompleted(true);
+            }
+        }
     }
 
     @FXML
@@ -172,6 +194,7 @@ public class MainMenuController {
 
                 for (ZipEntry zipEntry : entry.getValue()) {
                     TreeItem<ResourceItem> item = new TreeItem<>(new ResourceItem(new File(zipEntry.getName()).getName(), zipEntry), new ImageView(ResourceManager.getIconForName(zipEntry.getName())));
+//                    item.set
                     pack.getChildren().add(item);
                 }
 
@@ -182,8 +205,13 @@ public class MainMenuController {
         resourceTree.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
 
         resourceTree.setRoot(rootItem);
+
+        // Removes old tree items to keep the memory usage low
+//        System.gc();
     }
     private void handleMouseClicked(MouseEvent event) {
+        if (event.getButton() != MouseButton.PRIMARY) return;
+
         Node node = event.getPickResult().getIntersectedNode();
         // Accept clicks only on node cells, and not on empty spaces of the TreeView
         if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {

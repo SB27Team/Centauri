@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -62,10 +63,12 @@ public class Centauri {
     }
 
     private void addContent(ResourceItem res, Tab tab) {
+        StackPane pane = new StackPane();
         Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
         label.setTextAlignment(TextAlignment.CENTER);
         label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
-        tab.setContent(label);
+        pane.getChildren().add(label);
+        tab.setContent(pane);
 
         File f = new File(res.getEntry().getName());
         String mimetype = new MimetypesFileTypeMap().getContentType(f);

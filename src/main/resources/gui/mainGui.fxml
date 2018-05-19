@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
-<?import java.net.URL?>
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sb27team.centauri.controller.MainMenuController">
+
+<VBox fx:id="root" onDragDropped="#onDrag" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sb27team.centauri.controller.MainMenuController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -16,38 +29,42 @@
           <items>
             <MenuItem mnemonicParsing="false" onAction="#openMenuItemClicked" text="Open…">
               <accelerator>
-                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <SeparatorMenuItem mnemonicParsing="false"/>
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Export as JAR">
               <accelerator>
-                <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
               </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#scannerMenuItemClicked" text="Scan"/>
-            <MenuItem mnemonicParsing="false" onAction="#closeMenuItemClicked" text="Close"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" text="Preferences…"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" onAction="#quitMenuItemClicked" text="Quit"/>
+            <MenuItem mnemonicParsing="false" onAction="#scannerMenuItemClicked" text="Scan" />
+            <MenuItem mnemonicParsing="false" onAction="#closeMenuItemClicked" text="Close" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#quitMenuItemClicked" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About"/>
+            <MenuItem mnemonicParsing="false" text="About" />
           </items>
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.22605790645879734, 0.7739420935412027" focusTraversable="true" prefHeight="-1.0"
-               prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.22605790645879734, 0.7739420935412027" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0">
           <children>
-            <TreeView fx:id="resourceTree" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0"
-                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                      AnchorPane.topAnchor="0.0"/>
+            <TreeView fx:id="resourceTree" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <contextMenu>
+                        <ContextMenu fx:id="contextMenu">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Decompile with..." />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu></TreeView>
             <!--<TreeView layoutX="0.0" layoutY="0.0" prefHeight="553.0" prefWidth="200.0" />-->
           </children>
         </AnchorPane>
@@ -55,34 +72,34 @@
           <tabs>
             <Tab text="Home">
               <content>
-                <WebView id="homeWV" fx:id="homeWV" prefHeight="200.0" prefWidth="200.0"/>
+                <WebView id="homeWV" fx:id="homeWV" prefHeight="200.0" prefWidth="200.0" />
               </content>
             </Tab>
           </tabs>
         </TabPane>
-        <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="200.0"/>
+        <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="200.0" />
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
         <Label fx:id="leftStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" HBox.hgrow="ALWAYS">
           <font>
-            <Font size="11.0" fx:id="x3"/>
+            <Font size="11.0" fx:id="x3" />
           </font>
           <textFill>
-            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4"/>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
           </textFill>
         </Label>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS"/>
-        <Label fx:id="rightStatus" font="$x3" maxWidth="-1.0" textFill="$x4" HBox.hgrow="NEVER"/>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label fx:id="rightStatus" font="$x3" maxWidth="-1.0" textFill="$x4" HBox.hgrow="NEVER" />
       </children>
       <padding>
-        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
       </padding>
     </HBox>
   </children>
   <stylesheets>
-    <URL value="@style.css"/>
+    <URL value="@style.css" />
   </stylesheets>
 
 </VBox>

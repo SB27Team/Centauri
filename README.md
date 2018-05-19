@@ -29,3 +29,5 @@ https://www.flaticon.com/authors/smashicons
 https://www.flaticon.com/authors/yannick
 #### Image:
 https://www.flaticon.com/authors/smashicons
+#### Sad face:
+https://www.flaticon.com/authors/iconnice

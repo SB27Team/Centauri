@@ -51,13 +51,14 @@ public class Centauri {
 
         addContent(res, tab);
 
+        tab.setOnClosed(e -> resourceTabMap.remove(res));
+
         resourceTabMap.put(res, tab);
 
         return tab;
     }
 
     private void addContent(ResourceItem res, Tab tab) {
-
         Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
         label.setTextAlignment(TextAlignment.CENTER);
         label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
@@ -82,7 +83,7 @@ public class Centauri {
                         label.setText("Editor for this file was not found.");
                         return new IllegalStateException("Default editor not found");
                     })
-                    .open(f, getInputStream(res.getEntry()), tab);
+                    .open(res, getInputStream(res.getEntry()), tab);
         } catch (Exception e) {
             e.printStackTrace();
         }

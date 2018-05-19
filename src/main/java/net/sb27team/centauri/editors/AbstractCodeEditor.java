@@ -4,10 +4,12 @@ import javafx.embed.swing.SwingNode;
 import javafx.scene.control.Tab;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
+import net.sb27team.centauri.ResourceItem;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,19 +22,20 @@ public abstract class AbstractCodeEditor implements IEditor {
 
     static {
         try {
-            theme = Theme.load(Main.class.getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+            theme = Theme.load(Main.class.getResourceAsStream("/code/style.xml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void open(File file, InputStream stream, Tab tab) {
+    public void open(ResourceItem file, InputStream stream, Tab tab) {
         SwingNode sn = new SwingNode();
         RSyntaxTextArea sta = new RSyntaxTextArea();
         sta.setEditable(false);
         sta.setText(getContext(file, Centauri.INSTANCE.getOpenedFile()));
         sta.setSyntaxEditingStyle(getSyntax());
+        sta.setFont(new Font("Consolas", Font.PLAIN, 14));
         if(theme != null)
             theme.apply(sta);
         sn.setContent(new RTextScrollPane(sta));
@@ -41,5 +44,5 @@ public abstract class AbstractCodeEditor implements IEditor {
 
     abstract String getSyntax();
 
-    abstract String getContext(File classFile, File jar);
+    abstract String getContext(ResourceItem classFile, File jar);
 }

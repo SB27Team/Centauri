@@ -1,12 +1,19 @@
 package net.sb27team.centauri.editors;
 
+import com.google.common.io.ByteStreams;
 import net.sb27team.centauri.Centauri;
+import net.sb27team.centauri.ResourceItem;
 import net.sb27team.centauri.controller.MainMenuController;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.jboss.windup.decompiler.api.DecompilationFailure;
 import org.jboss.windup.decompiler.api.DecompilationResult;
 import org.jboss.windup.decompiler.fernflower.FernflowerDecompiler;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 /*
@@ -21,11 +28,25 @@ public class FFEditor extends AbstractCodeEditor {
     }
 
     @Override
-    String getContext(File classFile, File jar) {
-        MainMenuController.INSTANCE.setStatus("Decompiling "+classFile.getName()+"...");
-        DecompilationResult result = decompiler.decompileClassFile(jar.toPath(), classFile.toPath(), new File(System.getProperty("java.io.tmpdir")).toPath());
-        MainMenuController.INSTANCE.setStatus("Ready");
-        return result.getFailures().isEmpty() ? new ArrayList<>(result.getDecompiledFiles().values()).get(0) : "Error: " + result.getFailures().get(0).getMessage();
+    String getContext(ResourceItem classFile, File jar) {
+        File tmpFile;
+        try {
+            tmpFile = File.createTempFile("centauri", "_tmp.class");
+//            File outputFile = File.createTempFile("centauri", "_output.class");
+            Files.write(tmpFile.toPath(), ByteStreams.toByteArray(Centauri.INSTANCE.getInputStream(classFile)));
+            System.out.println(tmpFile.getName());
+            MainMenuController.INSTANCE.setStatus("Decompiling "+classFile+"...");
+            DecompilationResult result = decompiler.decompileClassFile(jar.toPath(), tmpFile.toPath(), Paths.get("E:/tmp/centauri"));
+            MainMenuController.INSTANCE.setStatus("Ready");
+            for (DecompilationFailure decompilationFailure : result.getFailures()) {
+                System.out.println(decompilationFailure.getPath() + "/" + decompilationFailure.getMessage());
+            }
+            tmpFile.deleteOnExit();
+            return result.getFailures().isEmpty() ? new String(Files.readAllBytes(Paths.get(new ArrayList<>(result.getDecompiledFiles().values()).get(0)))) : "Error: " + result.getFailures().get(0).getMessage();
+        } catch (IOException e) {
+            return "Error: " + e;
+        }
+
     }
 
     @Override

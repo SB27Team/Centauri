@@ -36,13 +36,19 @@ public class FFEditor extends AbstractCodeEditor {
             Files.write(tmpFile.toPath(), ByteStreams.toByteArray(Centauri.INSTANCE.getInputStream(classFile)));
             // System.out.println(tmpFile.getName());
             MainMenuController.INSTANCE.setStatus("Decompiling "+classFile+"...");
-            DecompilationResult result = decompiler.decompileClassFile(jar.toPath(), tmpFile.toPath(), Paths.get("E:/tmp/centauri"));
+            DecompilationResult result = decompiler.decompileClassFile(jar.toPath(), tmpFile.toPath(), Paths.get(System.getProperty("java.io.tmpdir")));
             MainMenuController.INSTANCE.setStatus("Ready");
 //            for (DecompilationFailure decompilationFailure : result.getFailures()) {
 //                System.out.println(decompilationFailure.getPath() + "/" + decompilationFailure.getMessage());
 //            }
             tmpFile.deleteOnExit();
-            return result.getFailures().isEmpty() ? new String(Files.readAllBytes(Paths.get(new ArrayList<>(result.getDecompiledFiles().values()).get(0)))) : "Error: " + result.getFailures().get(0).getMessage();
+
+            if (result.getFailures().isEmpty()) {
+                String file = new ArrayList<>(result.getDecompiledFiles().values()).get(0);
+                String content = new String(Files.readAllBytes(Paths.get(file)));
+                new File(file).delete();
+                return content;
+            } else return "Error: " + result.getFailures().get(0).getMessage();
         } catch (IOException e) {
             return "Error: " + e;
         }

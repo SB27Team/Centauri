@@ -17,10 +17,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Pair;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.controller.utils.Utils;
 import net.sb27team.centauri.editors.IEditor;
-import net.sb27team.centauri.editors.ProcyonEditor;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Configuration;
@@ -37,13 +37,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class Centauri {
+
     public static Centauri INSTANCE = new Centauri();
     public static final Logger LOGGER = Logger.getAnonymousLogger();
     public static boolean DEBUG = true;
     private ZipFile openedZipFile = null;
     private File openedFile = null;
     private List<ZipEntry> loadedZipEntries = new ArrayList<>();
-    public HashMap<FileComponent, Tab> resourceTabMap = new HashMap<>();
+    //(file, editor), javafx tab
+    public HashMap<Pair<FileComponent, String>, Tab> resourceTabMap = new HashMap<>();
     private Configuration config = new Configuration();
 
     static {
@@ -60,28 +62,24 @@ public class Centauri {
     private List<Thread> threads = new ArrayList<>();
 
     public Tab openTab(FileComponent res) {
+        return openTab(res, getOptimalEditor(res));
+    }
+
+    public Tab openTab(FileComponent res, Optional<IEditor> editor) {
         Tab tab = new Tab(res.getName().length() > 16 ? res.getName().substring(0, 16) + "..." : res.getName());
 
-//        Label label = new Label()
+        addContent(res, tab, editor);
 
-        addContent(res, tab);
+        String name = editor.isPresent() ? editor.get().name() : "Error";
+        tab.setOnClosed(e -> resourceTabMap.remove(new Pair<>(res, name)));
 
-        tab.setOnClosed(e -> resourceTabMap.remove(res));
-
-        resourceTabMap.put(res, tab);
+        resourceTabMap.put(new Pair<>(res, name), tab);
 
         return tab;
     }
 
-    private void addContent(FileComponent res, Tab tab) {
-        StackPane pane = new StackPane();
-        Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
-        label.setTextAlignment(TextAlignment.CENTER);
-        label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
-        pane.getChildren().add(label);
-        tab.setContent(pane);
-
-        File f = new File(res.getZipEntry().getName());
+    public Optional<IEditor> getOptimalEditor(final FileComponent component) {
+        File f = new File(component.getZipEntry().getName());
         String mimetype = new MimetypesFileTypeMap().getContentType(f);
         String type = mimetype.split("/")[0];
 
@@ -92,13 +90,26 @@ public class Centauri {
 
         List<IEditor> compatEditors = Utils.getSupportedEditors(type, f.getName());
         String editor = config.get("exts." + ext + ".default", compatEditors.get(0).name());
+        Optional<IEditor> optional = compatEditors.stream().filter(e -> editor.equals(e.name())).findFirst();
+        if (!optional.isPresent()) {
+            config.set("exts." + type + ".default", compatEditors.get(0).name());
+        }
+        return optional;
+    }
+
+
+    private void addContent(FileComponent res, Tab tab, Optional<IEditor> editor) {
+        StackPane pane = new StackPane();
+        Label label = new Label("LOADING...", new ImageView(ResourceManager.ANIMATED_LOADING_ICON));
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setFont(Font.font("Roboto", FontWeight.BOLD, 20));
+        pane.getChildren().add(label);
+        tab.setContent(pane);
         try {
-            compatEditors.stream().filter(e -> editor.equals(e.name())).findFirst()
-                    .orElseThrow(() -> {
-                        config.set("exts." + type + ".default", compatEditors.get(0).name());
-                        label.setText("Editor for this file was not found.");
-                        return new IllegalStateException("Default editor not found");
-                    }).open(res, getInputStream(res.getZipEntry()), tab);
+            editor.orElseThrow(() -> {
+                    label.setText("Editor for this file was not found.");
+                    return new IllegalStateException("Default editor not found");
+                }).open(res, getInputStream(res.getZipEntry()), tab);
         } catch (Exception e) {
             e.printStackTrace();
         }

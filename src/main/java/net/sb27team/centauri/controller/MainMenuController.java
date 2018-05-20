@@ -28,9 +28,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
 import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
@@ -41,16 +43,17 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.zip.ZipEntry;
+import java.util.Optional;
 
 public class MainMenuController {
+
     public static MainMenuController INSTANCE = new MainMenuController();
+
     @FXML
     private VBox root;
     @FXML
@@ -66,6 +69,9 @@ public class MainMenuController {
     @FXML
     private Label leftStatus;
 
+    @FXML
+    private Menu openWith = new Menu();
+
     private FileExplorer fileExplorer;
 
 
@@ -73,6 +79,26 @@ public class MainMenuController {
         INSTANCE = this;
         root.setOnDragOver(e -> {
             e.acceptTransferModes(TransferMode.COPY);
+        });
+        contextMenu.setOnShowing(event -> {
+            openWith.getItems().clear();
+            Component component = resourceTree.getSelectionModel().getSelectedItem().getValue().getComponent();
+            if (component instanceof FileComponent) {
+                FileComponent file = (FileComponent) component;
+                File f = new File(file.getZipEntry().getName());
+                String mimetype = new MimetypesFileTypeMap().getContentType(f);
+                String type = mimetype.split("/")[0];
+
+                Utils.getSupportedEditors(type, f.getName()).forEach(editor -> {
+                    MenuItem item = new MenuItem(editor.name());
+                    item.setOnAction(event1 -> {
+                        Centauri.LOGGER.fine("Open With: " + file.getName() + " " + editor.name());
+                        openOrSwitchToTab(file, Optional.of(editor));
+                    });
+                    openWith.getItems().add(item);
+                });
+            }
+            if (openWith.getItems().isEmpty()) openWith.getItems().add(new MenuItem("Not Supported"));
         });
         resourceTree.setCellFactory(treeView -> {
             TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>(){
@@ -201,10 +227,18 @@ public class MainMenuController {
     }
 
     private void openOrSwitchToTab(FileComponent res) {
-        if (Centauri.INSTANCE.resourceTabMap.containsKey(res)) {
-            tabPane.getSelectionModel().select(Centauri.INSTANCE.resourceTabMap.get(res));
+        openOrSwitchToTab(res, Centauri.INSTANCE.getOptimalEditor(res));
+    }
+
+    private void openOrSwitchToTab(FileComponent res, Optional<IEditor> editor) {
+        String name = editor.isPresent() ? editor.get().name() : "Error";
+
+        if (Centauri.INSTANCE.resourceTabMap.containsKey(new Pair<>(res, name))) {
+            Centauri.LOGGER.fine("Moved to tab " + res.getName() + " - " + name + " " + Centauri.INSTANCE.resourceTabMap.size());
+            tabPane.getSelectionModel().select(Centauri.INSTANCE.resourceTabMap.get(new Pair<>(res, name)));
         } else {
-            Tab tab = Centauri.INSTANCE.openTab(res);
+            Centauri.LOGGER.fine("Creating " + res.getName() + " via " + name);
+            Tab tab = Centauri.INSTANCE.openTab(res, editor);
 
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().select(tab);

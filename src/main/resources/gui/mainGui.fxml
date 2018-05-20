@@ -57,7 +57,8 @@
                <contextMenu>
                   <ContextMenu fx:id="contextMenu">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Decompile with..." />
+                      <Menu fx:id="openWith" mnemonicParsing="false" text="Open With">
+                      </Menu>
                     </items>
                   </ContextMenu>
                </contextMenu>

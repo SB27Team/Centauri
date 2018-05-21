@@ -23,6 +23,7 @@ import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
+import net.sb27team.centauri.utils.Mapper;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -61,6 +62,7 @@ public abstract class AbstractCodeEditor implements IEditor {
             String raw;
             try {
                 raw = getContext(file, Centauri.INSTANCE.getOpenedFile());
+                raw = Mapper.getInstance().replace(raw);
             } catch (IOException ex) {
                 raw = "Count not get Decompiled context: " + ex.getMessage();
                 System.err.println(raw);

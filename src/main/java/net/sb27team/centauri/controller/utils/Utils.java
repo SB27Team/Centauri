@@ -29,7 +29,6 @@ public class Utils {
 
     public static File openFileDialog(Window window) {
         FileChooser chooser = new FileChooser();
-
         File f = chooser.showOpenDialog(window);
 
         if (f == null) {

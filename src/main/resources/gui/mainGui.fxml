@@ -47,6 +47,13 @@
             <MenuItem mnemonicParsing="false" text="About" />
           </items>
         </Menu>
+        <Menu mnemonicParsing="false" text="Mapper">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Add File" onAction="#addFileToMapper"/>
+            <MenuItem mnemonicParsing="false" text="Clear" onAction="#clearMapper"/>
+            <Menu mnemonicParsing="false" text="Files" fx:id="mapperFiles"/>
+          </items>
+        </Menu>
       </menus>
     </MenuBar>
     <SplitPane dividerPositions="0.22605790645879734, 0.7739420935412027" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">

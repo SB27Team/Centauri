@@ -36,6 +36,7 @@ import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
+import net.sb27team.centauri.utils.Mapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class MainMenuController {
@@ -68,6 +70,9 @@ public class MainMenuController {
     private Label rightStatus;
     @FXML
     private Label leftStatus;
+
+    @FXML
+    private Menu mapperFiles;
 
     @FXML
     private Menu openWith = new Menu();
@@ -224,6 +229,19 @@ public class MainMenuController {
                 openOrSwitchToTab((FileComponent) component);
             }
         }
+    }
+
+    @FXML
+    public void clearMapper() {
+        Mapper.getInstance().clear();
+        mapperFiles.getItems().clear();
+    }
+
+    @FXML
+    public void addFileToMapper() {
+        File file = Utils.openFileDialog(null);
+        Mapper.getInstance().addFile(file);
+        mapperFiles.getItems().add(new MenuItem(file.getName()));
     }
 
     private void openOrSwitchToTab(FileComponent res) {

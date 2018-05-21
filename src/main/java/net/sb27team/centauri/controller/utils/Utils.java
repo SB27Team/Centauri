@@ -23,6 +23,7 @@ public class Utils {
             new FFEditor(),
             new CFREditor(),
             new ProcyonEditor(),
+            new JDEditor(),
             new ImageEditor(),
             new HexEditor() // should be the last one
     );

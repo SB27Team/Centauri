@@ -36,7 +36,7 @@ public class Component {
 
     public String getFullPath() {
         StringBuilder builder = new StringBuilder();
-        Lists.reverse(getParents()).forEach(directory -> builder.append(directory.getName()));
+        Lists.reverse(getParents()).forEach(directory -> builder.append(directory.getName()).append("/"));
         return builder.append(name).toString();
     }
 

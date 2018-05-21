@@ -24,6 +24,7 @@ public class Utils {
             new CFREditor(),
             new ProcyonEditor(),
             new JDEditor(),
+            new TextEditor(),
             new ImageEditor(),
             new HexEditor() // should be the last one
     );

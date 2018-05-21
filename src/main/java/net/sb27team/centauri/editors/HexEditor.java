@@ -26,7 +26,7 @@ public class HexEditor implements IEditor {
 
     @Override
     public boolean supports(String type, String name) {
-        return true;
+        return type.equals(".class");
     }
 
     @Override

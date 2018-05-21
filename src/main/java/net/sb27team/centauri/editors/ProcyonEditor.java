@@ -31,7 +31,7 @@ public class ProcyonEditor extends AbstractCodeEditor {
         Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Decompiling: " + classFile + "..."));
         try (StringWriter writer = new StringWriter()){
             Decompiler.decompile(
-                "java/lang/String",
+                temp.getAbsolutePath(),
                 new PlainTextOutput(writer),
                 DecompilerSettings.javaDefaults()
             );

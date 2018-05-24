@@ -12,7 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.utils.Utils;
 import net.sb27team.centauri.explorer.FileComponent;
 
 import java.io.InputStream;

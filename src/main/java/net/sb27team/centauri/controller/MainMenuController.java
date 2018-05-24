@@ -31,7 +31,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
-import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.utils.Utils;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
@@ -49,7 +49,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class MainMenuController {

@@ -19,7 +19,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 import net.sb27team.centauri.controller.MainMenuController;
-import net.sb27team.centauri.controller.utils.Utils;
+import net.sb27team.centauri.utils.Utils;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;

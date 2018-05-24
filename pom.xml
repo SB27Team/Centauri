@@ -31,6 +31,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.MinnDevelopment</groupId>
+            <artifactId>java-discord-rpc</artifactId>
+            <version>v2.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.windup.decompiler</groupId>
             <artifactId>decompiler-fernflower</artifactId>
             <version>4.0.1.Final</version>
@@ -88,6 +93,10 @@
             <name>clojars.org</name>
             <id>http://clojars.org/repo</id>
             <url>http://clojars.org/repo</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 </project>

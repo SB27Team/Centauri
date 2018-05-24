@@ -19,11 +19,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 import net.sb27team.centauri.controller.MainMenuController;
-import net.sb27team.centauri.utils.Utils;
+import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Configuration;
+import net.sb27team.centauri.utils.Utils;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
@@ -131,6 +132,7 @@ public class Centauri {
         }
         threads.clear();
         config.save();
+        DiscordIntegration.stopRPC();
 //        System.exit(0);
     }
 
@@ -154,6 +156,7 @@ public class Centauri {
             loadedZipEntries.clear();
         }
         Platform.runLater(() -> MainMenuController.INSTANCE.updateTree());
+        MainMenuController.INSTANCE.updateRPC();
     }
 
     public void openFile(File file) {
@@ -186,6 +189,7 @@ public class Centauri {
             MainMenuController.INSTANCE.setStatus("Error " + e);
             report(e);
         }
+        MainMenuController.INSTANCE.updateRPC();
     }
 
     private void report(Exception e) {

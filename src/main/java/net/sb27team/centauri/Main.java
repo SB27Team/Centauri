@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.resource.ResourceManager;
 
 public class Main extends Application {
@@ -23,15 +24,15 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         ResourceManager.loadResources();
 
+        DiscordIntegration.init();
+
         Parent root = FXMLLoader.load(Main.class.getResource("/gui/mainGui.fxml"));
 
         Scene scene = new Scene(root, 1000, 500);
 
         stage.setTitle("Centauri");
         stage.setScene(scene);
-        stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e ->  {
-            System.exit(0);
-        });
+        stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> System.exit(0));
         stage.getIcons().add(ResourceManager.CENTAURI_ICON);
         stage.show();
     }

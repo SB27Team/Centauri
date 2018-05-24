@@ -31,12 +31,13 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
-import net.sb27team.centauri.utils.Utils;
+import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
 import net.sb27team.centauri.utils.Mapper;
+import net.sb27team.centauri.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -260,6 +261,11 @@ public class MainMenuController {
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().select(tab);
         }
+        updateRPC();
+    }
+
+    public void updateRPC() {
+        DiscordIntegration.updateRPC(Centauri.INSTANCE.getOpenedFile() == null ? null : Centauri.INSTANCE.getOpenedFile().getName(), tabPane.getSelectionModel().getSelectedItem() == null ? null : tabPane.getSelectionModel().getSelectedItem().getText());
     }
 
     public FileExplorer getFileExplorer() {

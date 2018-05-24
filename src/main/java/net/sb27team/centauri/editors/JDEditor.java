@@ -10,12 +10,13 @@ import java.io.File;
 
 public class JDEditor extends AbstractCodeEditor {
 
-    private JavaDecompiler decompiler = new JavaDecompiler();
+//    private JavaDecompiler decompiler = new JavaDecompiler();
 
     @Override
     String getContext(FileComponent classFile, File jar) {
-        System.out.println(classFile.getFullPath() + " " + jar.getPath() + " " + jar.exists());
-        return decompiler.decompile(jar.getPath(), classFile.getFullPath());
+//        System.out.println(classFile.getFullPath() + " " + jar.getPath() + " " + jar.exists());
+//        return decompiler.decompile(jar.getPath(), classFile.getFullPath());
+        return "NOT IMPLEMENTED";
     }
 
     @Override

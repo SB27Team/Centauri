@@ -63,7 +63,10 @@ public abstract class AbstractCodeEditor implements IEditor {
             try {
                 raw = getContext(file, Centauri.INSTANCE.getOpenedFile());
                 raw = Mapper.getInstance().replace(raw);
-            } catch (IOException ex) {
+            } catch (InterruptedException e) {
+                Centauri.LOGGER.fine("Successfully interrupted " + name());
+                return;
+            } catch (Exception ex) {
                 raw = "Count not get Decompiled context: " + ex.getMessage();
                 System.err.println(raw);
                 ex.printStackTrace();
@@ -86,7 +89,7 @@ public abstract class AbstractCodeEditor implements IEditor {
             });
         }, "Decompiler thread");
         EventHandler<javafx.scene.input.MouseEvent> handler = event -> {
-//            thread.interrupt();
+            thread.interrupt();
 //            thread.suspend();
 //            thread.stop();
             Label l = new Label("  DECOMPILER STOPPED. (Close and reopen the tab)", new ImageView(ResourceManager.SAD_FACE));
@@ -101,5 +104,5 @@ public abstract class AbstractCodeEditor implements IEditor {
 
     abstract String getSyntax();
 
-    abstract String getContext(FileComponent classFile, File jar) throws IOException;
+    abstract String getContext(FileComponent classFile, File jar) throws IOException, Exception;
 }

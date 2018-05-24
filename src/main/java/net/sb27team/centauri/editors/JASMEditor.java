@@ -16,30 +16,33 @@ import javafx.application.Platform;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.explorer.FileComponent;
+import net.sb27team.centauri.utils.Utils;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 
-public class ProcyonEditor extends AbstractCodeEditor {
+public class JASMEditor extends AbstractCodeEditor {
 
     @Override
-    String getContext(FileComponent classFile, File jar) throws IOException {
+    String getContext(FileComponent classFile, File jar) throws Exception {
         File temp = File.createTempFile("centauri", "_tmp.class");
         Files.write(temp.toPath(), ByteStreams.toByteArray(Centauri.INSTANCE.getInputStream(classFile)));
 
         Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Decompiling: " + classFile + "..."));
-        DecompilerSettings settings = DecompilerSettings.javaDefaults();
-        settings.setUnicodeOutputEnabled(false);
-        try (StringWriter writer = new StringWriter()){
-            Decompiler.decompile(
-                temp.getAbsolutePath(),
-                new PlainTextOutput(writer),
-                settings
-            );
-            Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Ready"));
-            return writer.toString();
+        Process process = Runtime.getRuntime().exec("javap -c " + (Utils.getOS() == Utils.OSType.WINDOWS ? "\"" + temp.getAbsolutePath() + "\"" : Utils.unixPathReplacer(temp.getAbsolutePath())));
+
+        int exitCode = process.waitFor();
+
+        if (exitCode < 0) {
+            throw new IllegalStateException(String.format("Javap returned %d instead of 0", exitCode));
         }
+
+        Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Ready"));
+
+        return new String(ByteStreams.toByteArray(process.getInputStream()), "UTF-8");
     }
 
     @Override
@@ -54,6 +57,6 @@ public class ProcyonEditor extends AbstractCodeEditor {
 
     @Override
     public String name() {
-        return "Procyon Decompiler";
+        return "JavaP Disassembler";
     }
 }

@@ -24,10 +24,11 @@ public class Utils {
             new FFEditor(),
             new CFREditor(),
             new ProcyonEditor(),
-            new JDEditor(),
+//            new JDEditor(),
             new TextEditor(),
             new ImageEditor(),
-            new HexEditor() // should be the last one
+            new HexEditor(),
+            new JASMEditor() // should be the last one
     );
 
     public static File openFileDialog(Window window) {
@@ -52,4 +53,34 @@ public class Utils {
     public static List<IEditor> getSupportedEditors(String type, String name) {
         return editors.stream().filter(e -> e.supports(type, name)).collect(Collectors.toList());
     }
+
+    public static String unixPathReplacer(String absolutePath) {
+        return absolutePath.replace("(", "\\)").replace(" ", "\\ ");
+    }
+
+    public static OSType getOS() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("win")) {
+            return OSType.WINDOWS;
+        } else if (osName.contains("mac")) {
+            return OSType.MACOSX;
+        } else if (osName.contains("unix")) {
+            return OSType.UNIX;
+        } else if (osName.contains("linux")) {
+            return OSType.UNIX;
+        } else {
+            return osName.contains("sonos") ? OSType.SOLARIS : OSType.UNKNOWN;
+        }
+    }
+
+    public enum OSType {
+        WINDOWS,
+        MACOSX,
+        UNIX,
+        SOLARIS,
+        UNKNOWN;
+    }
+
+
+
 }

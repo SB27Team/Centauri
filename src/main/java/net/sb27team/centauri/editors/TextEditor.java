@@ -3,6 +3,8 @@ package net.sb27team.centauri.editors;
 import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import net.sb27team.centauri.explorer.FileComponent;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -21,6 +23,7 @@ public class TextEditor implements IEditor {
         TextArea area = new TextArea();
         area.setEditable(false);
         area.setWrapText(false);
+        area.setFont(Font.font("Consolas", 13));
         Platform.runLater(() -> {
             tab.setContent(area);
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {

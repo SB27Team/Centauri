@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Utils {
+
     private static List<IEditor> editors = Arrays.asList(
             new FFEditor(),
             new CFREditor(),

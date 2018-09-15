@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.sb27team.centauri.actions.ActionManager;
@@ -24,8 +25,21 @@ import net.sb27team.centauri.resource.ResourceManager;
 
 public class Main extends Application {
 
+    private static Main instance;
+
+    private Stage stage;
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public static Main getInstance() {
+        return instance;
+    }
 
     public void start(Stage stage) throws Exception {
+        instance = this;
+        this.stage = stage;
         Platform.setImplicitExit(false);
         ResourceManager.loadResources();
 

@@ -278,4 +278,10 @@ public class MainMenuController {
     public void setFileExplorer(FileExplorer fileExplorer) {
         this.fileExplorer = fileExplorer;
     }
+
+    @FXML
+    public void fullscreenToggle(ActionEvent event) {
+        CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
+        Main.getInstance().getStage().setFullScreen(menuItem.isSelected());
+    }
 }

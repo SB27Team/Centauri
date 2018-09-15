@@ -31,6 +31,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
+<?import javafx.scene.control.CheckMenuItem?>
 <VBox fx:id="root" onDragDropped="#onDrag" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sb27team.centauri.controller.MainMenuController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
@@ -55,6 +56,11 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" fx:id="exit" text="Quit" />
           </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="View">
+            <items>
+                <CheckMenuItem mnemonicParsing="false" text="Fullscreen" onAction="#fullscreenToggle"/>
+            </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>

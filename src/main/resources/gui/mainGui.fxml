@@ -53,7 +53,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#quitMenuItemClicked" text="Quit" />
+            <MenuItem mnemonicParsing="false" fx:id="exit" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

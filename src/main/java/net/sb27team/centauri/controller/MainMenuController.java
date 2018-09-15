@@ -63,6 +63,8 @@ public class MainMenuController {
 
     @FXML
     public MenuItem open;
+    @FXML
+    public MenuItem exit;
 
     @FXML
     private VBox root;
@@ -118,6 +120,7 @@ public class MainMenuController {
         });
         ActionManager.INSTANCE.applyMenuItem(export, ExportAction.class);
         ActionManager.INSTANCE.applyMenuItem(open, OpenAction.class);
+        ActionManager.INSTANCE.applyMenuItem(exit, ExportAction.class);
         resourceTree.setCellFactory(treeView -> {
             TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>() {
                 @Override
@@ -190,12 +193,6 @@ public class MainMenuController {
                 Centauri.INSTANCE.report(e1);
             }
         }
-    }
-
-    @FXML
-    public void quitMenuItemClicked(ActionEvent e) {
-//        Centauri.INSTANCE.shutDown();
-        System.exit(0);
     }
 
     @FXML

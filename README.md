@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SB27Team/Centauri.svg?branch=master)](https://travis-ci.org/SB27Team/Centauri)
+
 # Centauri
 Java reverse engineer program, supporting multiple decompilers, editing bytecode and more
 

@@ -21,7 +21,7 @@ public class Alerts {
 
     private static void errorDialog(String string) {
         Alert alert = new Alert(Alert.AlertType.ERROR, "Error", ButtonType.OK);
-
+        alert.setContentText(string);
         alert.showAndWait();
     }
 

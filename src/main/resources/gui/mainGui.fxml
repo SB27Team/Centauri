@@ -50,7 +50,7 @@
               </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#scannerMenuItemClicked" text="Scan" />
-            <MenuItem mnemonicParsing="false" onAction="#closeMenuItemClicked" text="Close" />
+            <MenuItem mnemonicParsing="false" fx:id="close" text="Close" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />

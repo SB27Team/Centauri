@@ -33,6 +33,7 @@ import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
 import net.sb27team.centauri.actions.*;
+import net.sb27team.centauri.actions.impl.CloseAction;
 import net.sb27team.centauri.actions.impl.ExitAcion;
 import net.sb27team.centauri.actions.impl.ExportAction;
 import net.sb27team.centauri.actions.impl.OpenAction;
@@ -66,6 +67,9 @@ public class MainMenuController {
     public MenuItem open;
     @FXML
     public MenuItem exit;
+
+    @FXML
+    public MenuItem close;
 
     @FXML
     private VBox root;
@@ -119,9 +123,12 @@ public class MainMenuController {
             }
             if (openWith.getItems().isEmpty()) openWith.getItems().add(new MenuItem("Not Supported"));
         });
+
         ActionManager.INSTANCE.applyMenuItem(export, ExportAction.class);
         ActionManager.INSTANCE.applyMenuItem(open, OpenAction.class);
         ActionManager.INSTANCE.applyMenuItem(exit, ExitAcion.class);
+        ActionManager.INSTANCE.applyMenuItem(close, CloseAction.class);
+
         resourceTree.setCellFactory(treeView -> {
             TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>() {
                 @Override
@@ -194,11 +201,6 @@ public class MainMenuController {
                 Centauri.INSTANCE.report(e1);
             }
         }
-    }
-
-    @FXML
-    public void closeMenuItemClicked(ActionEvent e) {
-        Centauri.INSTANCE.closeFile();
     }
 
     public void setStatus(String text) {

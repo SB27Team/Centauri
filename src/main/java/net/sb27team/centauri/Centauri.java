@@ -145,36 +145,12 @@ public class Centauri {
 
     public void shutDown() {
         LOGGER.info("Shutting down...");
-        closeFile();
         for (Thread thread : threads) {
             thread.interrupt();
         }
         threads.clear();
         config.save();
         DiscordIntegration.stopRPC();
-    }
-
-    public void closeFile() {
-        LOGGER.fine("Closing file...");
-
-        resourceTabMap.clear();
-
-        if (openedZipFile != null) {
-            try {
-                openedZipFile.close();
-            } catch (IOException e) {
-                report(e);
-            }
-        }
-
-        openedZipFile = null;
-        openedFile = null;
-
-        if (loadedZipEntries != null) {
-            loadedZipEntries.clear();
-        }
-        Platform.runLater(() -> MainMenuController.INSTANCE.updateTree());
-        MainMenuController.INSTANCE.updateRPC();
     }
 
     public void report(Exception e) {

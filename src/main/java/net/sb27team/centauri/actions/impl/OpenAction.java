@@ -1,10 +1,7 @@
 package net.sb27team.centauri.actions.impl;
 
 import net.sb27team.centauri.Centauri;
-import net.sb27team.centauri.actions.Action;
-import net.sb27team.centauri.actions.DataFactory;
-import net.sb27team.centauri.actions.DataKey;
-import net.sb27team.centauri.actions.DataKeys;
+import net.sb27team.centauri.actions.*;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.utils.Utils;
 
@@ -26,7 +23,7 @@ public class OpenAction extends Action {
             Centauri.LOGGER.info("Opening " + file.getName());
 
             if (Centauri.INSTANCE.getOpenedFile() != null) {
-                Centauri.INSTANCE.closeFile();
+                ActionManager.INSTANCE.call(CloseAction.class);
             }
 
             MainMenuController.INSTANCE.setStatus("Opening " + file.getAbsolutePath());
@@ -44,7 +41,7 @@ public class OpenAction extends Action {
                 MainMenuController.INSTANCE.updateTree();
                 MainMenuController.INSTANCE.setStatus("Ready");
             } catch (Exception e) {
-                Centauri.INSTANCE.closeFile();
+                ActionManager.INSTANCE.call(CloseAction.class);
                 MainMenuController.INSTANCE.updateTree();
                 MainMenuController.INSTANCE.setStatus("Error " + e);
                 Centauri.INSTANCE.report(e);

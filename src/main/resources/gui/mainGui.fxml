@@ -60,6 +60,13 @@
         <Menu mnemonicParsing="false" text="View">
             <items>
                 <CheckMenuItem mnemonicParsing="false" text="Fullscreen" onAction="#fullscreenToggle"/>
+                <Menu mnemonicParsing="false" text="FileExplorer">
+                    <CheckMenuItem mnemonicParsing="false" text="Compremise" selected="true" onAction="#toggleCompremise"/>
+                    <CheckMenuItem mnemonicParsing="false" text="Package First" selected="true" onAction="#togglePackageFist"/>
+                    <CheckMenuItem mnemonicParsing="false" text="Sort By Type" onAction="#toggleSortType"/>
+                    <CheckMenuItem mnemonicParsing="false" text="Show File Type" selected="true" onAction="#toggleShowType"/>
+                    <CheckMenuItem mnemonicParsing="false" text="Flattern" onAction="#toggleFlattern"/>
+                </Menu>
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

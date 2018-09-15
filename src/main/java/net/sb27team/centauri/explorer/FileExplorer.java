@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
 public class FileExplorer {
 
     private Directory mainPackage;
-    private boolean compremise = true, packageFirst = true, sortType = false, flattern = false, showFileType = true;
+    private static boolean compremise = true, packageFirst = true, sortType = false, flattern = false, showFileType = true;
     private String separator;
 
     public FileExplorer(Set<ZipEntry> files, String projekt, String separator) {
@@ -130,5 +130,46 @@ public class FileExplorer {
 
     public void setMainPackage(Directory mainPackage) {
         this.mainPackage = mainPackage;
+    }
+
+
+    public static boolean isCompremise() {
+        return compremise;
+    }
+
+    public static void setCompremise(boolean compremise) {
+        FileExplorer.compremise = compremise;
+    }
+
+    public static boolean isPackageFirst() {
+        return packageFirst;
+    }
+
+    public static void setPackageFirst(boolean packageFirst) {
+        FileExplorer.packageFirst = packageFirst;
+    }
+
+    public static boolean isSortType() {
+        return sortType;
+    }
+
+    public static void setSortType(boolean sortType) {
+        FileExplorer.sortType = sortType;
+    }
+
+    public static boolean isFlattern() {
+        return flattern;
+    }
+
+    public static void setFlattern(boolean flattern) {
+        FileExplorer.flattern = flattern;
+    }
+
+    public static boolean isShowFileType() {
+        return showFileType;
+    }
+
+    public static void setShowFileType(boolean showFileType) {
+        FileExplorer.showFileType = showFileType;
     }
 }

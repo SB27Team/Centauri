@@ -284,4 +284,34 @@ public class MainMenuController {
         CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
         Main.getInstance().getStage().setFullScreen(menuItem.isSelected());
     }
+
+    public void toggleCompremise(ActionEvent event) {
+        CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
+        FileExplorer.setCompremise(menuItem.isSelected());
+        updateTree();
+    }
+
+    public void togglePackageFist(ActionEvent event) {
+        CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
+        FileExplorer.setPackageFirst(menuItem.isSelected());
+        updateTree();
+    }
+
+    public void toggleSortType(ActionEvent event) {
+        CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
+        FileExplorer.setSortType(menuItem.isSelected());
+        updateTree();
+    }
+
+    public void toggleShowType(ActionEvent event) {
+        CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
+        FileExplorer.setShowFileType(menuItem.isSelected());
+        updateTree();
+    }
+
+    public void toggleFlattern(ActionEvent event) {
+        CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
+        FileExplorer.setFlattern(menuItem.isSelected());
+        updateTree();
+    }
 }

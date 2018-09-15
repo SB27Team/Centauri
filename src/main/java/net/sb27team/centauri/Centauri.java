@@ -73,7 +73,7 @@ public class Centauri {
 
         FlowPane pane = new FlowPane(Orientation.HORIZONTAL);
         ProgressBar progressBar = new ProgressBar();
-        Label state = new Label();
+        Label state = new Label("Exporting... (Preparing)");
 
         pane.getChildren().add(state);
         pane.getChildren().add(progressBar);
@@ -83,6 +83,7 @@ public class Centauri {
         dialogPane.getChildren().add(pane);
 
         Alert alert = new Alert(Alert.AlertType.NONE, "Exporting...", ButtonType.CANCEL);
+        alert.getDialogPane().setContent(pane);
         alert.show();
 
         try {
@@ -107,6 +108,7 @@ public class Centauri {
             }
 
             while (entries.hasMoreElements()) {
+                state.setText("Exporting... " + (currentEntry + 1) + "/" + entryCount);
                 ZipEntry entry = entries.nextElement();
 
                 if (!exported.contains(entry.getName())) {
@@ -116,6 +118,7 @@ public class Centauri {
                 }
 
                 currentEntry++;
+                progressBar.setProgress(entryCount / (currentEntry + 1) * 100);
             }
             zos.close();
         } catch (Exception e) {

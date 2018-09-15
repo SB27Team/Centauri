@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2018 SinC (superblaubeere27, Cubixy, Xc3pt1on, Cython)
+ * Copyright (c) 2017-2018 SB27Team (superblaubeere27, Cubixy, Xc3pt1on, SplotyCode)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWAR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package net.sb27team.centauri.controller;
@@ -36,6 +37,7 @@ import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
+import net.sb27team.centauri.utils.Alerts;
 import net.sb27team.centauri.utils.Mapper;
 import net.sb27team.centauri.utils.Utils;
 import org.apache.commons.io.IOUtils;
@@ -106,7 +108,7 @@ public class MainMenuController {
             if (openWith.getItems().isEmpty()) openWith.getItems().add(new MenuItem("Not Supported"));
         });
         resourceTree.setCellFactory(treeView -> {
-            TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>(){
+            TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>() {
                 @Override
                 protected void updateItem(ExplorerItem obj, boolean empty) {
                     super.updateItem(obj, empty);
@@ -242,6 +244,20 @@ public class MainMenuController {
         File file = Utils.openFileDialog(null);
         Mapper.getInstance().addFile(file);
         mapperFiles.getItems().add(new MenuItem(file.getName()));
+    }
+
+    @FXML
+    public void exportMenuItemClicked(ActionEvent e) {
+        if (Centauri.INSTANCE.getOpenedFile() == null) {
+            Alerts.noFileOpened();
+            return;
+        }
+
+        try {
+            Centauri.INSTANCE.export(Utils.saveFileDialog(null));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
     private void openOrSwitchToTab(FileComponent res) {

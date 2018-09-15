@@ -1,22 +1,27 @@
 /*
- * Copyright (c) 2018 SinC (superblaubeere27, Cubixy, Xc3pt1on, Cython)
+ * Copyright (c) 2017-2018 SB27Team (superblaubeere27, Cubixy, Xc3pt1on, SplotyCode)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWAR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package net.sb27team.centauri;
 
+import com.google.common.io.ByteStreams;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.geometry.Orientation;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.discord.DiscordIntegration;
@@ -27,15 +32,15 @@ import net.sb27team.centauri.utils.Configuration;
 import net.sb27team.centauri.utils.Utils;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class Centauri {
 
@@ -45,6 +50,7 @@ public class Centauri {
     private ZipFile openedZipFile = null;
     private File openedFile = null;
     private List<ZipEntry> loadedZipEntries = new ArrayList<>();
+    private HashMap<ZipEntry, byte[]> updatedData = new HashMap<>();
     //(file, editor), javafx tab
     public HashMap<Pair<FileComponent, String>, Tab> resourceTabMap = new HashMap<>();
     private Configuration config = new Configuration();
@@ -61,6 +67,66 @@ public class Centauri {
     }
 
     private List<Thread> threads = new ArrayList<>();
+
+    public void export(File export) {
+        if (getOpenedFile() == null) return;
+
+        FlowPane pane = new FlowPane(Orientation.HORIZONTAL);
+        ProgressBar progressBar = new ProgressBar();
+        Label state = new Label();
+
+        pane.getChildren().add(state);
+        pane.getChildren().add(progressBar);
+
+        DialogPane dialogPane = new DialogPane();
+
+        dialogPane.getChildren().add(pane);
+
+        Alert alert = new Alert(Alert.AlertType.NONE, "Exporting...", ButtonType.CANCEL);
+        alert.show();
+
+        try {
+            int entryCount = openedZipFile.size();
+
+            Enumeration<? extends ZipEntry> entries = openedZipFile.entries();
+            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(export));
+
+            int currentEntry = 0;
+
+
+
+            List<String> exported = new ArrayList<>();
+
+            for (Map.Entry<ZipEntry, byte[]> zipEntryEntry : updatedData.entrySet()) {
+                zos.putNextEntry(new ZipEntry(zipEntryEntry.getKey().getName()));
+                zos.write(zipEntryEntry.getValue());
+
+                exported.add(zipEntryEntry.getKey().getName());
+
+                zos.closeEntry();
+            }
+
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+
+                if (!exported.contains(entry.getName())) {
+                    zos.putNextEntry(new ZipEntry(entry.getName()));
+                    ByteStreams.copy(getInputStream(entry), zos);
+                    zos.closeEntry();
+                }
+
+                currentEntry++;
+            }
+            zos.close();
+        } catch (Exception e) {
+            report(e);
+            alert.close();
+            return;
+        }
+
+        alert.close();
+        new Alert(Alert.AlertType.INFORMATION, "Exported", ButtonType.OK).showAndWait();
+    }
 
     public Tab openTab(FileComponent res) {
         return openTab(res, getOptimalEditor(res));
@@ -86,7 +152,7 @@ public class Centauri {
 
         String ext = "";
         if (f.getName().lastIndexOf(".") != -1)
-            ext = f.getName().substring(f.getName().lastIndexOf(".") + 1, f.getName().length()).toLowerCase();
+            ext = f.getName().substring(f.getName().lastIndexOf(".") + 1).toLowerCase();
 
 
         List<IEditor> compatEditors = Utils.getSupportedEditors(type, f.getName());
@@ -108,9 +174,9 @@ public class Centauri {
         tab.setContent(pane);
         try {
             editor.orElseThrow(() -> {
-                    label.setText("Editor for this file was not found.");
-                    return new IllegalStateException("Default editor not found");
-                }).open(res, getInputStream(res.getZipEntry()), tab);
+                label.setText("Editor for this file was not found.");
+                return new IllegalStateException("Default editor not found");
+            }).open(res, getInputStream(res.getZipEntry()), tab);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,7 +187,20 @@ public class Centauri {
     }
 
     public InputStream getInputStream(ZipEntry entry) throws IOException {
-        return openedZipFile.getInputStream(entry);
+        return updatedData.containsKey(entry) ? new ByteArrayInputStream(updatedData.get(entry)) : openedZipFile.getInputStream(entry);
+    }
+
+    public void updateData(FileComponent component, byte[] newData) {
+        updateData(component.getZipEntry(), newData);
+    }
+
+    public void updateData(ZipEntry entry, byte[] newData) {
+        if (newData == null) {
+            newData = new byte[0];
+        }
+
+        updatedData.put(entry, newData);
+        LOGGER.fine(MessageFormat.format("Updated {0} ({1} bytes)", entry.getName(), newData.length));
     }
 
     public void shutDown() {
@@ -189,6 +268,7 @@ public class Centauri {
             MainMenuController.INSTANCE.setStatus("Error " + e);
             report(e);
         }
+
         MainMenuController.INSTANCE.updateRPC();
     }
 
@@ -198,6 +278,8 @@ public class Centauri {
         if (DEBUG) {
             e.printStackTrace();
         }
+
+        new Alert(Alert.AlertType.ERROR, e.toString()).show();
     }
 
     public List<ZipEntry> getLoadedZipEntries() {

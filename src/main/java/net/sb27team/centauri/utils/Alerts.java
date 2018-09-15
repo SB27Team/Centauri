@@ -7,24 +7,22 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.sb27team.centauri.explorer;
 
-import java.util.List;
+package net.sb27team.centauri.utils;
 
-public class Directory extends Component {
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
-    private List<Component> files;
+public class Alerts {
 
-    public Directory(String name, Directory parent, List<Component> files) {
-        super(name, parent);
-        this.files = files;
+    public static void noFileOpened() {
+        errorDialog("No file opened");
     }
 
-    public List<Component> getFiles() {
-        return files;
+    private static void errorDialog(String string) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Error", ButtonType.OK);
+
+        alert.showAndWait();
     }
 
-    public void setFiles(List<Component> files) {
-        this.files = files;
-    }
 }

@@ -213,7 +213,7 @@ public class MainMenuController {
             return;
         }
 
-        fileExplorer = new FileExplorer(new HashSet<>(Centauri.INSTANCE.getLoadedZipEntries()), Centauri.INSTANCE.getOpenedFile().getName(), "/");
+        fileExplorer = new FileExplorer(new HashSet<>(Centauri.INSTANCE.getLoadedZipEntries()), Centauri.INSTANCE.getOpenedFile().getName(), ".");
         resourceTree.setRoot(fileExplorer.getMain());
 
         EventHandler<MouseEvent> mouseEventHandle = this::handleMouseClicked;

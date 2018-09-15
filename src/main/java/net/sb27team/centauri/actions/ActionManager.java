@@ -1,8 +1,10 @@
 package net.sb27team.centauri.actions;
 
 import com.google.common.reflect.ClassPath;
+import javafx.scene.control.MenuItem;
 import net.sb27team.centauri.Centauri;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,12 @@ public enum ActionManager {
 
     public void call(Class<? extends Action> action) {
         call(action, new DataFactory());
+    }
+
+    public void applyMenuItem(MenuItem menuItem, Class<? extends Action> actionClazz) {
+        Action action = actions.get(actionClazz);
+        menuItem.setText(action.getDisplayName());
+        menuItem.setOnAction(event -> action.call(new DataFactory()));
     }
 
 }

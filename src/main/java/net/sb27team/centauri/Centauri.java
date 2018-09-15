@@ -10,18 +10,15 @@
 
 package net.sb27team.centauri;
 
-import com.google.common.io.ByteStreams;
 import javafx.application.Platform;
-import javafx.geometry.Orientation;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.discord.DiscordIntegration;
@@ -32,7 +29,10 @@ import net.sb27team.centauri.utils.Configuration;
 import net.sb27team.centauri.utils.Utils;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
@@ -40,7 +40,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
 public class Centauri {
 
@@ -67,69 +66,6 @@ public class Centauri {
     }
 
     private List<Thread> threads = new ArrayList<>();
-
-    public void export(File export) {
-        if (getOpenedFile() == null) return;
-
-        FlowPane pane = new FlowPane(Orientation.HORIZONTAL);
-        ProgressBar progressBar = new ProgressBar();
-        Label state = new Label("Exporting... (Preparing)");
-
-        pane.getChildren().add(state);
-        pane.getChildren().add(progressBar);
-
-        DialogPane dialogPane = new DialogPane();
-
-        dialogPane.getChildren().add(pane);
-
-        Alert alert = new Alert(Alert.AlertType.NONE, "Exporting...", ButtonType.CANCEL);
-        alert.getDialogPane().setContent(pane);
-        alert.show();
-
-        try {
-            int entryCount = openedZipFile.size();
-
-            Enumeration<? extends ZipEntry> entries = openedZipFile.entries();
-            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(export));
-
-            int currentEntry = 0;
-
-
-
-            List<String> exported = new ArrayList<>();
-
-            for (Map.Entry<ZipEntry, byte[]> zipEntryEntry : updatedData.entrySet()) {
-                zos.putNextEntry(new ZipEntry(zipEntryEntry.getKey().getName()));
-                zos.write(zipEntryEntry.getValue());
-
-                exported.add(zipEntryEntry.getKey().getName());
-
-                zos.closeEntry();
-            }
-
-            while (entries.hasMoreElements()) {
-                state.setText("Exporting... " + (currentEntry + 1) + "/" + entryCount);
-                ZipEntry entry = entries.nextElement();
-
-                if (!exported.contains(entry.getName())) {
-                    zos.putNextEntry(new ZipEntry(entry.getName()));
-                    ByteStreams.copy(getInputStream(entry), zos);
-                    zos.closeEntry();
-                }
-
-                currentEntry++;
-                progressBar.setProgress(entryCount / (currentEntry + 1) * 100);
-            }
-            zos.close();
-        } catch (Exception e) {
-            report(e);
-            alert.close();
-            return;
-        }
-
-        alert.close();
-        new Alert(Alert.AlertType.INFORMATION, "Exported", ButtonType.OK).showAndWait();
-    }
 
     public Tab openTab(FileComponent res) {
         return openTab(res, getOptimalEditor(res));
@@ -241,40 +177,6 @@ public class Centauri {
         MainMenuController.INSTANCE.updateRPC();
     }
 
-    public void openFile(File file) {
-        Objects.requireNonNull(file, "File is null");
-        resourceTabMap.clear();
-
-        LOGGER.info("Opening " + file.getName());
-
-        if (openedFile != null) {
-            closeFile();
-        }
-
-        MainMenuController.INSTANCE.setStatus("Opening " + file.getAbsolutePath());
-
-        try {
-            openedZipFile = new ZipFile(file);
-            openedFile = file;
-            Enumeration<? extends ZipEntry> entries = openedZipFile.entries();
-
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                this.loadedZipEntries.add(entry);
-            }
-
-            MainMenuController.INSTANCE.updateTree();
-            MainMenuController.INSTANCE.setStatus("Ready");
-        } catch (Exception e) {
-            closeFile();
-            MainMenuController.INSTANCE.updateTree();
-            MainMenuController.INSTANCE.setStatus("Error " + e);
-            report(e);
-        }
-
-        MainMenuController.INSTANCE.updateRPC();
-    }
-
     public void report(Exception e) {
         LOGGER.severe("ERROR: " + e);
 
@@ -291,6 +193,26 @@ public class Centauri {
 
     public File getOpenedFile() {
         return openedFile;
+    }
+
+    public ZipFile getOpenedZipFile() {
+        return openedZipFile;
+    }
+
+    public HashMap<ZipEntry, byte[]> getUpdatedData() {
+        return updatedData;
+    }
+
+    public HashMap<Pair<FileComponent, String>, Tab> getResourceTabMap() {
+        return resourceTabMap;
+    }
+
+    public void setOpenedZipFile(ZipFile openedZipFile) {
+        this.openedZipFile = openedZipFile;
+    }
+
+    public void setOpenedFile(File openedFile) {
+        this.openedFile = openedFile;
     }
 
     public void addThread(Thread thread) {

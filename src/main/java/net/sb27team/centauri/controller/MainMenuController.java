@@ -32,6 +32,9 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
+import net.sb27team.centauri.actions.*;
+import net.sb27team.centauri.actions.impl.ExportAction;
+import net.sb27team.centauri.actions.impl.OpenAction;
 import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
@@ -59,6 +62,9 @@ public class MainMenuController {
     public static MainMenuController INSTANCE = new MainMenuController();
 
     @FXML
+    public MenuItem open;
+
+    @FXML
     private VBox root;
     @FXML
     private ContextMenu contextMenu;
@@ -75,6 +81,9 @@ public class MainMenuController {
 
     @FXML
     private Menu mapperFiles;
+
+    @FXML
+    private MenuItem export = new MenuItem();
 
     @FXML
     private Menu openWith = new Menu();
@@ -107,6 +116,8 @@ public class MainMenuController {
             }
             if (openWith.getItems().isEmpty()) openWith.getItems().add(new MenuItem("Not Supported"));
         });
+        ActionManager.INSTANCE.applyMenuItem(export, ExportAction.class);
+        ActionManager.INSTANCE.applyMenuItem(open, OpenAction.class);
         resourceTree.setCellFactory(treeView -> {
             TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>() {
                 @Override
@@ -155,7 +166,8 @@ public class MainMenuController {
             List<File> files = e.getDragboard().getFiles();
 
             if (files.size() > 0) {
-                Centauri.INSTANCE.openFile(files.get(0));
+                DataFactory factory = new DataFactory();
+                factory.putData(DataKeys.OPEN_FILE, files.get(0));
                 e.setDropCompleted(true);
             }
         }
@@ -189,15 +201,6 @@ public class MainMenuController {
     @FXML
     public void closeMenuItemClicked(ActionEvent e) {
         Centauri.INSTANCE.closeFile();
-    }
-
-    @FXML
-    public void openMenuItemClicked(ActionEvent e) {
-        try {
-            Centauri.INSTANCE.openFile(Utils.openFileDialog(null));
-        } catch (Exception e1) {
-            Centauri.INSTANCE.report(e1);
-        }
     }
 
     public void setStatus(String text) {
@@ -244,20 +247,6 @@ public class MainMenuController {
         File file = Utils.openFileDialog(null);
         Mapper.getInstance().addFile(file);
         mapperFiles.getItems().add(new MenuItem(file.getName()));
-    }
-
-    @FXML
-    public void exportMenuItemClicked(ActionEvent e) {
-        if (Centauri.INSTANCE.getOpenedFile() == null) {
-            Alerts.noFileOpened();
-            return;
-        }
-
-        try {
-            Centauri.INSTANCE.export(Utils.saveFileDialog(null));
-        } catch (Exception e1) {
-            Centauri.INSTANCE.report(e1);
-        }
     }
 
     private void openOrSwitchToTab(FileComponent res) {

@@ -33,6 +33,7 @@ import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
 import net.sb27team.centauri.actions.*;
+import net.sb27team.centauri.actions.impl.ExitAcion;
 import net.sb27team.centauri.actions.impl.ExportAction;
 import net.sb27team.centauri.actions.impl.OpenAction;
 import net.sb27team.centauri.discord.DiscordIntegration;
@@ -120,7 +121,7 @@ public class MainMenuController {
         });
         ActionManager.INSTANCE.applyMenuItem(export, ExportAction.class);
         ActionManager.INSTANCE.applyMenuItem(open, OpenAction.class);
-        ActionManager.INSTANCE.applyMenuItem(exit, ExportAction.class);
+        ActionManager.INSTANCE.applyMenuItem(exit, ExitAcion.class);
         resourceTree.setCellFactory(treeView -> {
             TreeCell<ExplorerItem> cell = new TreeCell<ExplorerItem>() {
                 @Override

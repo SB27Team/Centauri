@@ -11,6 +11,7 @@
 package net.sb27team.centauri;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,6 +26,7 @@ public class Main extends Application {
 
 
     public void start(Stage stage) throws Exception {
+        Platform.setImplicitExit(false);
         ResourceManager.loadResources();
 
         DiscordIntegration.init();
@@ -35,7 +37,10 @@ public class Main extends Application {
 
         stage.setTitle("Centauri");
         stage.setScene(scene);
-        stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> ActionManager.INSTANCE.call(ExitAcion.class));
+        stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
+            ActionManager.INSTANCE.call(ExitAcion.class);
+            windowEvent.consume();
+        });
         stage.getIcons().add(ResourceManager.CENTAURI_ICON);
         stage.show();
     }

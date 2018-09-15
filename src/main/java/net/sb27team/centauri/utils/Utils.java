@@ -15,6 +15,8 @@ import javafx.stage.Window;
 import net.sb27team.centauri.editors.*;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,6 +89,13 @@ public class Utils {
         } else {
             return osName.contains("sonos") ? OSType.SOLARIS : OSType.UNKNOWN;
         }
+    }
+
+    public static String getExpetionString(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        return sw.toString();
     }
 
     public enum OSType {

@@ -12,11 +12,39 @@ package net.sb27team.centauri.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 public class Alerts {
 
     public static void noFileOpened() {
         errorDialog("No file opened");
+    }
+
+    public static void exeptionDialog(Throwable throwable) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Thrown");
+        alert.setContentText(throwable.getMessage());
+
+        TextArea textArea = new TextArea(Utils.getExpetionString(throwable));
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(new Label("Stack Trace: "), 0, 0);
+        expContent.add(textArea, 0, 1);
+
+        alert.getDialogPane().setExpandableContent(expContent);
+
+        alert.show();
     }
 
     private static void errorDialog(String string) {

@@ -25,6 +25,7 @@ import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
+import net.sb27team.centauri.utils.Alerts;
 import net.sb27team.centauri.utils.Configuration;
 import net.sb27team.centauri.utils.Utils;
 
@@ -151,7 +152,6 @@ public class Centauri {
         threads.clear();
         config.save();
         DiscordIntegration.stopRPC();
-//        System.exit(0);
     }
 
     public void closeFile() {
@@ -184,7 +184,7 @@ public class Centauri {
             e.printStackTrace();
         }
 
-        new Alert(Alert.AlertType.ERROR, e.toString()).show();
+        Alerts.exeptionDialog(e);
     }
 
     public List<ZipEntry> getLoadedZipEntries() {

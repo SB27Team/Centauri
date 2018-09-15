@@ -8,8 +8,6 @@ public class ActionMenuItem extends MenuItem {
 
     public ActionMenuItem(Class<? extends Action> action) {
         this.action = action;
-        setOnAction(event -> {
-            ActionManager.INSTANCE.call(action);
-        });
+        setOnAction(event -> ActionManager.INSTANCE.call(action));
     }
 }

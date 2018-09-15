@@ -4,11 +4,8 @@ import com.google.common.reflect.ClassPath;
 import javafx.scene.control.MenuItem;
 import net.sb27team.centauri.Centauri;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public enum ActionManager {
 

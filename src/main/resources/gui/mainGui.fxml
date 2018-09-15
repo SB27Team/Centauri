@@ -32,106 +32,91 @@
 <?import javafx.scene.web.WebView?>
 
 <?import javafx.scene.control.CheckMenuItem?>
-<VBox fx:id="root" onDragDropped="#onDrag" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sb27team.centauri.controller.MainMenuController">
-  <children>
+<VBox fx:id="root" onDragDropped="#onDrag" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sb27team.centauri.controller.MainMenuController">
+    <stylesheets>
+        <URL value="@style.css"/>
+    </stylesheets>
+
     <MenuBar VBox.vgrow="NEVER">
-      <menus>
         <Menu mnemonicParsing="false" text="File">
-          <items>
             <MenuItem mnemonicParsing="false" fx:id="open" text="Open…">
-              <accelerator>
-                <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-              </accelerator>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                </accelerator>
             </MenuItem>
-            <SeparatorMenuItem mnemonicParsing="false" />
+            <SeparatorMenuItem mnemonicParsing="false"/>
             <MenuItem mnemonicParsing="false" fx:id="export" text="Export">
-              <accelerator>
-                <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-              </accelerator>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#scannerMenuItemClicked" text="Scan" />
-            <MenuItem mnemonicParsing="false" fx:id="close" text="Close" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" fx:id="exit" text="Quit" />
-          </items>
+            <MenuItem mnemonicParsing="false" onAction="#scannerMenuItemClicked" text="Scan"/>
+            <MenuItem mnemonicParsing="false" fx:id="close" text="Close"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" text="Preferences…"/>
+            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" fx:id="exit" text="Quit"/>
         </Menu>
         <Menu mnemonicParsing="false" text="View">
-            <items>
-                <CheckMenuItem mnemonicParsing="false" text="Fullscreen" onAction="#fullscreenToggle"/>
-                <Menu mnemonicParsing="false" text="FileExplorer">
-                    <CheckMenuItem mnemonicParsing="false" text="Compremise" selected="true" onAction="#toggleCompremise"/>
-                    <CheckMenuItem mnemonicParsing="false" text="Package First" selected="true" onAction="#togglePackageFist"/>
-                    <CheckMenuItem mnemonicParsing="false" text="Sort By Type" onAction="#toggleSortType"/>
-                    <CheckMenuItem mnemonicParsing="false" text="Show File Type" selected="true" onAction="#toggleShowType"/>
-                    <CheckMenuItem mnemonicParsing="false" text="Flattern" onAction="#toggleFlattern"/>
-                </Menu>
-            </items>
+            <CheckMenuItem mnemonicParsing="false" text="Fullscreen" onAction="#fullscreenToggle"/>
+            <Menu mnemonicParsing="false" text="FileExplorer">
+                <CheckMenuItem mnemonicParsing="false" text="Compremise" selected="true"
+                               onAction="#toggleCompremise"/>
+                <CheckMenuItem mnemonicParsing="false" text="Package First" selected="true"
+                               onAction="#togglePackageFist"/>
+                <CheckMenuItem mnemonicParsing="false" text="Sort By Type" onAction="#toggleSortType"/>
+                <CheckMenuItem mnemonicParsing="false" text="Show File Type" selected="true"
+                               onAction="#toggleShowType"/>
+                <CheckMenuItem mnemonicParsing="false" text="Flattern" onAction="#toggleFlattern"/>
+            </Menu>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About" />
-          </items>
+            <MenuItem mnemonicParsing="false" text="About"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Mapper">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#addFileToMapper" text="Add File" />
-            <MenuItem mnemonicParsing="false" onAction="#clearMapper" text="Clear" />
-            <Menu fx:id="mapperFiles" mnemonicParsing="false" text="Files" />
-          </items>
+            <MenuItem mnemonicParsing="false" onAction="#addFileToMapper" text="Add File"/>
+            <MenuItem mnemonicParsing="false" onAction="#clearMapper" text="Clear"/>
+            <Menu fx:id="mapperFiles" mnemonicParsing="false" text="Files"/>
         </Menu>
-      </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.22605790645879734, 0.7739420935412027" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <items>
+    <SplitPane dividerPositions="0.22605790645879734, 0.7739420935412027" focusTraversable="true"
+               VBox.vgrow="ALWAYS">
         <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0">
-          <children>
-            <TreeView fx:id="resourceTree" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <contextMenu>
-                  <ContextMenu fx:id="contextMenu">
-                    <items>
-                      <Menu fx:id="openWith" mnemonicParsing="false" text="Open With">
-                      </Menu>
-                    </items>
-                  </ContextMenu>
-               </contextMenu>
+            <TreeView fx:id="resourceTree" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0"
+                      AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                      AnchorPane.topAnchor="0.0">
+                <contextMenu>
+                    <ContextMenu fx:id="contextMenu">
+                        <items>
+                            <Menu fx:id="openWith" mnemonicParsing="false" text="Open With">
+                            </Menu>
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
             </TreeView>
             <!--<TreeView layoutX="0.0" layoutY="0.0" prefHeight="553.0" prefWidth="200.0" />-->
-          </children>
         </AnchorPane>
         <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0">
-          <tabs>
             <Tab text="Home">
-              <content>
-                <WebView id="homeWV" fx:id="homeWV" prefHeight="200.0" prefWidth="200.0" />
-              </content>
+                <WebView id="homeWV" fx:id="homeWV" prefHeight="200.0" prefWidth="200.0"/>
             </Tab>
-          </tabs>
         </TabPane>
-        <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="200.0" />
-      </items>
+        <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="200.0"/>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
-      <children>
-        <Label fx:id="leftStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" HBox.hgrow="ALWAYS">
-          <font>
-            <Font size="11.0" fx:id="x3" />
-          </font>
-          <textFill>
-            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
-          </textFill>
+        <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+        </padding>
+        <Label fx:id="leftStatus" maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+            <font>
+                <Font size="11.0" fx:id="x3"/>
+            </font>
+            <textFill>
+                <Color blue="0.625" green="0.625" red="0.625" fx:id="x4"/>
+            </textFill>
         </Label>
-        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <Label fx:id="rightStatus" font="$x3" maxWidth="-1.0" textFill="$x4" HBox.hgrow="NEVER" />
-      </children>
-      <padding>
-        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-      </padding>
+        <Pane HBox.hgrow="ALWAYS"/>
+        <Label fx:id="rightStatus" font="$x3" textFill="$x4" HBox.hgrow="NEVER"/>
     </HBox>
-  </children>
-  <stylesheets>
-    <URL value="@style.css" />
-  </stylesheets>
-
 </VBox>

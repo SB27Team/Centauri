@@ -10,8 +10,6 @@
 
 package net.sb27team.centauri;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
@@ -20,7 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
-import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.FileComponent;

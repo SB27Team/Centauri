@@ -42,7 +42,6 @@ import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.*;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.scanner.Scanner;
-import net.sb27team.centauri.utils.Alerts;
 import net.sb27team.centauri.utils.Mapper;
 import net.sb27team.centauri.utils.Utils;
 import org.apache.commons.io.IOUtils;
@@ -100,9 +99,7 @@ public class MainMenuController {
 
     public void initialize() {
         INSTANCE = this;
-        root.setOnDragOver(e -> {
-            e.acceptTransferModes(TransferMode.COPY);
-        });
+        root.setOnDragOver(e -> e.acceptTransferModes(TransferMode.COPY));
         contextMenu.setOnShowing(event -> {
             openWith.getItems().clear();
             Component component = resourceTree.getSelectionModel().getSelectedItem().getValue().getComponent();

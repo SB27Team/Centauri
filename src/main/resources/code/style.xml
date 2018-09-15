@@ -23,13 +23,13 @@
     <!--  General editor colors. -->
     <background color="1e1e1e" />
     <caret color="4ec9b0" />
-    <selection useFG="false" bg="3b3b3b" roundedEdges="false" />
-    <currentLineHighlight color="2F393C" fade="false" />
+    <selection useFG="false" bg="3b3b3b"/>
+    <currentLineHighlight color="2F393C"/>
     <marginLine fg="394448" />
     <markAllHighlight color="6b8189" />
     <!-- TODO: Fix me -->
-    <markOccurrencesHighlight color="5b7179" border="false" />
-    <matchedBracket fg="6A8088" bg="6b8189" highlightBoth="false" animate="true" />
+    <markOccurrencesHighlight color="5b7179"/>
+    <matchedBracket fg="6A8088" bg="6b8189" animate="true" />
     <hyperlinks fg="a082bd" />
     <secondaryLanguages>
         <language index="1" bg="333344" />

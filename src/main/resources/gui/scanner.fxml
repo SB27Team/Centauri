@@ -16,17 +16,15 @@
             minWidth="-Infinity" prefHeight="402.0" prefWidth="600.0" style="-fx-background-color: rgb(31, 31, 31);"
             stylesheets="@style.css" xmlns="http://javafx.com/javafx/9.0.1"
             fx:controller="net.sb27team.centauri.controller.ScannerController">
-    <children>
-        <Label fx:id="resultTxt" layoutY="340.0" text="Scanning..." AnchorPane.bottomAnchor="20.0"
-               AnchorPane.leftAnchor="2.0"/>
-        <TableView fx:id="table" prefHeight="376.0" prefWidth="600.0" AnchorPane.bottomAnchor="40.0"
-                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <columns>
-                <TableColumn fx:id="level" prefWidth="92.0" text="Level"/>
-                <TableColumn fx:id="name" prefWidth="150.0" text="Name"/>
-                <TableColumn fx:id="desc" minWidth="0.0" prefWidth="267.0" text="Description"/>
-                <TableColumn fx:id="loc" prefWidth="90.0" text="Location"/>
-            </columns>
-        </TableView>
-    </children>
+    <Label fx:id="resultTxt" layoutY="340.0" text="Scanning..." AnchorPane.bottomAnchor="20.0"
+           AnchorPane.leftAnchor="2.0"/>
+    <TableView fx:id="table" prefHeight="376.0" prefWidth="600.0" AnchorPane.bottomAnchor="40.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columns>
+            <TableColumn fx:id="level" prefWidth="92.0" text="Level"/>
+            <TableColumn fx:id="name" prefWidth="150.0" text="Name"/>
+            <TableColumn fx:id="desc" minWidth="0.0" prefWidth="267.0" text="Description"/>
+            <TableColumn fx:id="loc" prefWidth="90.0" text="Location"/>
+        </columns>
+    </TableView>
 </AnchorPane>

@@ -10,9 +10,6 @@
 
 package net.sb27team.centauri.editors;
 
-import jd.core.Decompiler;
-import jd.core.DecompilerException;
-import jd.ide.intellij.JavaDecompiler;
 import net.sb27team.centauri.explorer.FileComponent;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 

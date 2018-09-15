@@ -10,9 +10,6 @@
 package net.sb27team.centauri.editors;
 
 import com.google.common.io.ByteStreams;
-import com.strobel.decompiler.Decompiler;
-import com.strobel.decompiler.DecompilerSettings;
-import com.strobel.decompiler.PlainTextOutput;
 import javafx.application.Platform;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.controller.MainMenuController;
@@ -21,8 +18,6 @@ import net.sb27team.centauri.utils.Utils;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.nio.file.Files;
 
 public class JASMEditor extends AbstractCodeEditor {

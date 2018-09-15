@@ -44,16 +44,13 @@ public class DiscordIntegration {
         lib.Discord_Initialize(applicationId, handlers, true, steamId);
 
         if (thread == null || !thread.isAlive()) {
-            thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (!Thread.currentThread().isInterrupted()) {
-                        lib.Discord_RunCallbacks();
+            thread = new Thread(() -> {
+                while (!Thread.currentThread().isInterrupted()) {
+                    lib.Discord_RunCallbacks();
 
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException ignored) {
-                        }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException ignored) {
                     }
                 }
             }, "RPC-Callback-Handler");

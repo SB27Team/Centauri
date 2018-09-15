@@ -23,7 +23,6 @@ public enum ActionManager {
                 }
             }
         } catch (IOException | ReflectiveOperationException ex) {
-            ex.printStackTrace();
             Centauri.INSTANCE.report(ex);
         }
     }

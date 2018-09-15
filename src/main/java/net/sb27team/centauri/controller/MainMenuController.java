@@ -142,7 +142,7 @@ public class MainMenuController {
                 Platform.runLater(() ->
                         homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34); font-family: Arial, Helvetica, sans-serif; color: white;\">" + html + "</body></html>", "text/html"));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Centauri.INSTANCE.report(ex);
                 Platform.runLater(() ->
                         homeWV.getEngine().loadContent("<html><body style=\"background: rgb(34, 34, 34);\"><h1 style=\"color: white; font-family: Arial, Helvetica, sans-serif;\">Failed to load the home page!</h1></body></html>", "text/html"));
             }
@@ -175,7 +175,7 @@ public class MainMenuController {
                 new Thread(() ->
                         ScannerController.INSTANCE.setData(new Scanner(Centauri.INSTANCE.getOpenedFile()).runScan())).start();
             } catch (IOException e1) {
-                e1.printStackTrace();
+                Centauri.INSTANCE.report(e1);
             }
         }
     }
@@ -196,7 +196,7 @@ public class MainMenuController {
         try {
             Centauri.INSTANCE.openFile(Utils.openFileDialog(null));
         } catch (Exception e1) {
-            e1.printStackTrace();
+            Centauri.INSTANCE.report(e1);
         }
     }
 
@@ -256,7 +256,7 @@ public class MainMenuController {
         try {
             Centauri.INSTANCE.export(Utils.saveFileDialog(null));
         } catch (Exception e1) {
-            e1.printStackTrace();
+            Centauri.INSTANCE.report(e1);
         }
     }
 

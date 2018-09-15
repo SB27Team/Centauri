@@ -14,6 +14,7 @@ import com.google.common.io.ByteStreams;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.control.Tab;
+import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.explorer.FileComponent;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -73,7 +74,7 @@ public class SyntaxHighligtEditor implements IEditor {
             try {
                 sta.setText(new String(ByteStreams.toByteArray(stream), StandardCharsets.UTF_8));
             } catch (IOException e) {
-                e.printStackTrace();
+                Centauri.INSTANCE.report(e);
             }
             sta.setSyntaxEditingStyle(getSyntaxForFile(file.getName()));
             sta.setFont(new Font("Consolas", Font.PLAIN, 14));

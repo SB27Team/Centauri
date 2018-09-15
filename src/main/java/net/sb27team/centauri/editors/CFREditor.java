@@ -62,7 +62,7 @@ public class CFREditor extends AbstractCodeEditor {
             try {
                 classFile = dcCommonState.getClassFile(classFile.getClassType());
             } catch (CannotLoadClassException e) {
-                e.printStackTrace();
+                Centauri.INSTANCE.report(e);
                 return "Error: " + e.getMessage();
             }
             classFile.loadInnerClasses(dcCommonState);

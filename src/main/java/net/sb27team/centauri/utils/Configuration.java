@@ -14,6 +14,7 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.sb27team.centauri.Centauri;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class Configuration {
         try {
             json = parser.parse(Files.toString(config, Charset.defaultCharset())).getAsJsonObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            Centauri.INSTANCE.report(e);
         }
     }
 
@@ -46,7 +47,7 @@ public class Configuration {
         try {
             Files.write(json.toString(), config, Charset.defaultCharset());
         } catch (IOException e) {
-            e.printStackTrace();
+            Centauri.INSTANCE.report(e);
         }
     }
 

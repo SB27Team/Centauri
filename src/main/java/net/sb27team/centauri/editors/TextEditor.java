@@ -19,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
+import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.explorer.FileComponent;
 
 import java.io.BufferedReader;
@@ -62,7 +63,7 @@ public class TextEditor implements IEditor {
                 String line;
                 while ((line = reader.readLine()) != null) area.appendText(line + System.lineSeparator());
             } catch (IOException e) {
-                e.printStackTrace();
+                Centauri.INSTANCE.report(e);
             }
         });
     }

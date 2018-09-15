@@ -64,7 +64,7 @@ public class Scanner {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Centauri.INSTANCE.report(e);
         }
         return threats;
     }

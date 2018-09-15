@@ -44,7 +44,7 @@ public abstract class AbstractCodeEditor implements IEditor {
         try {
             theme = Theme.load(Main.class.getResourceAsStream("/code/style.xml"));
         } catch (IOException e) {
-            e.printStackTrace();
+            Centauri.INSTANCE.report(e);
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class AbstractCodeEditor implements IEditor {
             } catch (Exception ex) {
                 raw = "Count not get Decompiled context: " + ex.getMessage();
                 System.err.println(raw);
-                ex.printStackTrace();
+                Centauri.INSTANCE.report(ex);
             }
             final String text = raw;
 

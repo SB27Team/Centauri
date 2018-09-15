@@ -181,7 +181,7 @@ public class Centauri {
                 return new IllegalStateException("Default editor not found");
             }).open(res, getInputStream(res.getZipEntry()), tab);
         } catch (Exception e) {
-            e.printStackTrace();
+            Centauri.INSTANCE.report(e);
         }
     }
 

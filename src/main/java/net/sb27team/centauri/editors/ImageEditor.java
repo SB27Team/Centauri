@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.utils.Utils;
 import net.sb27team.centauri.explorer.FileComponent;
 
@@ -30,9 +31,8 @@ public class ImageEditor implements IEditor {
             Image image = new Image(stream);
             pane.setContent(new ImageView(image));
             tab.setContent(pane);
-            return;
         } catch (Exception e) {
-            e.printStackTrace();
+            Centauri.INSTANCE.report(e);
         }
     }
 

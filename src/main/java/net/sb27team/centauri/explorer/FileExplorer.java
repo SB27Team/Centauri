@@ -25,6 +25,8 @@ public class FileExplorer {
     private static boolean compremise = true, packageFirst = true, sortType = false, flattern = false, showFileType = true;
     private String separator;
 
+    private static String viewSeparator = ".";
+
     public FileExplorer(Set<ZipEntry> files, String projekt, String separator) {
         this.separator = separator;
         mainPackage = new Directory(projekt, null, new ArrayList<>());
@@ -102,7 +104,7 @@ public class FileExplorer {
                     Directory current = (Directory) component;
                     while (compremise && current.getFiles().size() == 1 && current.getFiles().get(0) instanceof Directory) {
                         current = (Directory) current.getFiles().get(0);
-                        name.append(separator).append(current.getName());
+                        name.append(viewSeparator).append(current.getName());
                     }
                     TreeItem<ExplorerItem> dir = getNodesForDirectory(current);
                     dir.setValue(new ExplorerItem(name.toString(), current));

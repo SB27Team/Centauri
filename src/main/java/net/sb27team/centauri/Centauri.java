@@ -275,7 +275,7 @@ public class Centauri {
         MainMenuController.INSTANCE.updateRPC();
     }
 
-    private void report(Exception e) {
+    public void report(Exception e) {
         LOGGER.severe("ERROR: " + e);
 
         if (DEBUG) {

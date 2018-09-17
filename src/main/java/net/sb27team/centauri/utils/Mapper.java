@@ -12,6 +12,7 @@ package net.sb27team.centauri.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import net.sb27team.centauri.Centauri;
 
 import java.io.*;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class Mapper {
     private static final String[] SEPERATORS = {", ", ",", ":"};
 
     public void addFile(File file) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), Centauri.INSTANCE.getEncoding()))) {
             String line;
             int skip = 0;
             while ((line = reader.readLine()) != null) {

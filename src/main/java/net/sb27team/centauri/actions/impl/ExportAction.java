@@ -1,6 +1,16 @@
+/*
+ * Copyright (c) 2017-2018 SB27Team (superblaubeere27, Cubixy, Xc3pt1on, SplotyCode)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package net.sb27team.centauri.actions.impl;
 
-import com.google.common.io.ByteStreams;
+import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -8,16 +18,11 @@ import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.actions.Action;
 import net.sb27team.centauri.actions.DataFactory;
 import net.sb27team.centauri.utils.Alerts;
+import net.sb27team.centauri.utils.IProgressCallback;
 import net.sb27team.centauri.utils.Utils;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.text.MessageFormat;
 
 public class ExportAction extends Action {
 
@@ -30,8 +35,6 @@ public class ExportAction extends Action {
 
 
         File file = Utils.saveFileDialog(null);
-
-        if (file == null) return;
 
         FlowPane pane = new FlowPane(Orientation.HORIZONTAL);
         ProgressBar progressBar = new ProgressBar();
@@ -46,51 +49,33 @@ public class ExportAction extends Action {
 
         Alert alert = new Alert(Alert.AlertType.NONE, "Exporting...", ButtonType.CANCEL);
         alert.getDialogPane().setContent(pane);
+
+
+        Thread t = new Thread(() -> Centauri.INSTANCE.export(file, new IProgressCallback() {
+
+            @Override
+            public void progressUpdate(int curr, int max) {
+                Platform.runLater(() -> {
+                    state.setText(MessageFormat.format("Exporting {0}% ({1}/{2})", curr * 100 / max, curr, max));
+                    progressBar.setProgress(curr / (double) max);
+                });
+            }
+
+            @Override
+            public void end(boolean success) {
+                Platform.runLater(() -> {
+                    alert.close();
+
+                    if (success) new Alert(Alert.AlertType.INFORMATION, "Exported", ButtonType.OK).showAndWait();
+                });
+            }
+        }));
+
+        alert.resultProperty().addListener(event -> t.interrupt());
         alert.show();
 
-        try {
-            int entryCount = Centauri.INSTANCE.getOpenedZipFile().size();
+        t.start();
 
-            Enumeration<? extends ZipEntry> entries = Centauri.INSTANCE.getOpenedZipFile().entries();
-            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
-
-            int currentEntry = 0;
-
-
-
-            List<String> exported = new ArrayList<>();
-
-            for (Map.Entry<ZipEntry, byte[]> zipEntryEntry : Centauri.INSTANCE.getUpdatedData().entrySet()) {
-                zos.putNextEntry(new ZipEntry(zipEntryEntry.getKey().getName()));
-                zos.write(zipEntryEntry.getValue());
-
-                exported.add(zipEntryEntry.getKey().getName());
-
-                zos.closeEntry();
-            }
-
-            while (entries.hasMoreElements()) {
-                state.setText("Exporting... " + (currentEntry + 1) + "/" + entryCount);
-                ZipEntry entry = entries.nextElement();
-
-                if (!exported.contains(entry.getName())) {
-                    zos.putNextEntry(new ZipEntry(entry.getName()));
-                    ByteStreams.copy(Centauri.INSTANCE.getInputStream(entry), zos);
-                    zos.closeEntry();
-                }
-
-                currentEntry++;
-                progressBar.setProgress(entryCount / (currentEntry + 1) * 100);
-            }
-            zos.close();
-        } catch (Exception e) {
-            Centauri.INSTANCE.report(e);
-            alert.close();
-            return;
-        }
-
-        alert.close();
-        new Alert(Alert.AlertType.INFORMATION, "Exported", ButtonType.OK).showAndWait();
     }
 
     @Override

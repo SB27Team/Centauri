@@ -10,6 +10,7 @@
 package net.sb27team.centauri.explorer;
 
 import net.sb27team.centauri.Centauri;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,5 +38,13 @@ public class FileComponent extends Component {
 
     public void setZipEntry(ZipEntry zipEntry) {
         this.zipEntry = zipEntry;
+    }
+
+    public ClassNode getClassNode() throws IOException {
+        return Centauri.INSTANCE.getClassNode(this);
+    }
+
+    public void updateClassNode(ClassNode classNode) {
+        update(Centauri.INSTANCE.classNodeToBytes(classNode));
     }
 }

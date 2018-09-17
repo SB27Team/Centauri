@@ -77,4 +77,10 @@ public class TextEditor implements IEditor {
     public String name() {
         return "Text Editor";
     }
+
+
+    @Override
+    public int priority() {
+        return PRIORITY_TEXT_EDITOR;
+    }
 }

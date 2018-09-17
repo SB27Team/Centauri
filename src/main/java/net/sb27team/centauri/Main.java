@@ -24,7 +24,6 @@ import net.sb27team.centauri.resource.ResourceManager;
 
 public class Main extends Application {
 
-    private static Main instance;
 
     private Stage stage;
 
@@ -32,12 +31,7 @@ public class Main extends Application {
         return stage;
     }
 
-    public static Main getInstance() {
-        return instance;
-    }
-
     public void start(Stage stage) throws Exception {
-        instance = this;
         this.stage = stage;
         Platform.setImplicitExit(false);
         ResourceManager.loadResources();

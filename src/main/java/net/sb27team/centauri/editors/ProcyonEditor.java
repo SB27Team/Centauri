@@ -17,9 +17,12 @@ import javafx.application.Platform;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.explorer.FileComponent;
+import net.sb27team.centauri.utils.Utils;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 
 public class ProcyonEditor extends AbstractCodeEditor {
@@ -31,6 +34,7 @@ public class ProcyonEditor extends AbstractCodeEditor {
 
         Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Decompiling: " + classFile + "..."));
         DecompilerSettings settings = DecompilerSettings.javaDefaults();
+        settings.setShowSyntheticMembers(true);
         settings.setUnicodeOutputEnabled(false);
         try (StringWriter writer = new StringWriter()){
             Decompiler.decompile(
@@ -38,6 +42,7 @@ public class ProcyonEditor extends AbstractCodeEditor {
                 new PlainTextOutput(writer),
                 settings
             );
+            Utils.deleteFile(temp);
             Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Ready"));
             return writer.toString();
         }
@@ -57,4 +62,5 @@ public class ProcyonEditor extends AbstractCodeEditor {
     public String name() {
         return "Procyon Decompiler";
     }
+
 }

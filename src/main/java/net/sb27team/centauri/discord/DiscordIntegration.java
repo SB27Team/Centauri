@@ -18,7 +18,7 @@ public class DiscordIntegration {
     private static DiscordRPC lib;
     private static Thread thread;
 
-    public static void init() {
+    public synchronized static void init() {
 //        System.out.println("Init");
 
         if (!isEnabled()) {
@@ -62,7 +62,7 @@ public class DiscordIntegration {
         return true;
     }
 
-    public static void updateRPC(String fileName, String shownClass) {
+    public synchronized static void updateRPC(String fileName, String shownClass) {
         if (!isEnabled()) {
 //            System.out.println("Update stop A");
             stopRPC();
@@ -83,7 +83,7 @@ public class DiscordIntegration {
         lib.Discord_UpdatePresence(presence);
     }
 
-    public static void stopRPC() {
+    public synchronized static void stopRPC() {
         if (thread != null) {
             thread.stop();
             thread = null;

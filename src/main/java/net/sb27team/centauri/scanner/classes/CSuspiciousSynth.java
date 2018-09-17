@@ -48,8 +48,8 @@ public class CSuspiciousSynth implements IClassScanner {
                 synthMethods++;
             }
         }
-        double synthFieldPercent = totalFields == 0 ? 0 : synthFields / totalFields;
-        double synthMethodPercent = totalMethods == 0 ? 0 : synthMethods / totalMethods;
+        double synthFieldPercent = totalFields == 0 ? 0 : synthFields / (double) totalFields;
+        double synthMethodPercent = totalMethods == 0 ? 0 : synthMethods / (double) totalMethods;
         if ((synthFieldPercent + synthMethodPercent) / 2 > threshold)
             return new Scanner.Threat("Unnatural Synthetics", "The class seems to be modified forcing an unnatural amount of members to be synthetic. Known tactic for anti-reverse engineering.", cn.name, Scanner.Level.MEDIUM);
         return null;

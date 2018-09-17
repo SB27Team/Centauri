@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Cubxity on 18/05/2018
  */
 public class ScannerController {
-    public static ScannerController INSTANCE = new ScannerController();
+    static ScannerController INSTANCE = new ScannerController();
 
     @FXML
     public TableView<Scanner.Threat> table;

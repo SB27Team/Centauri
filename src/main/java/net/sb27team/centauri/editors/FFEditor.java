@@ -15,6 +15,7 @@ import javafx.application.Platform;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.explorer.FileComponent;
+import net.sb27team.centauri.utils.Utils;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.jboss.windup.decompiler.api.DecompilationResult;
 import org.jboss.windup.decompiler.fernflower.FernflowerDecompiler;
@@ -55,8 +56,8 @@ public class FFEditor extends AbstractCodeEditor {
 
             if (result.getFailures().isEmpty()) {
                 String file = new ArrayList<>(result.getDecompiledFiles().values()).get(0);
-                String content = new String(Files.readAllBytes(Paths.get(file)));
-                new File(file).delete();
+                String content = new String(Files.readAllBytes(Paths.get(file)), Centauri.INSTANCE.getEncoding());
+                Utils.deleteFile(new File(file));
                 return content;
             } else return "Error: " + result.getFailures().get(0).getMessage();
         } catch (IOException e) {
@@ -74,4 +75,5 @@ public class FFEditor extends AbstractCodeEditor {
     public String name() {
         return "FernFlower Decompiler";
     }
+
 }

@@ -34,4 +34,10 @@ public class HexEditor implements IEditor {
     public String name() {
         return "Hex editor";
     }
+
+
+    @Override
+    public int priority() {
+        return PRIORITY_TEXT_EDITOR;
+    }
 }

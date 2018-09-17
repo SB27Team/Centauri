@@ -8,32 +8,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.sb27team.centauri.actions.impl;
+package net.sb27team.centauri.editors.bytecode;
 
-import net.sb27team.centauri.Centauri;
-import net.sb27team.centauri.actions.Action;
-import net.sb27team.centauri.actions.DataFactory;
-import net.sb27team.centauri.actions.DataKeys;
-import net.sb27team.centauri.utils.Utils;
+import org.objectweb.asm.tree.ClassNode;
 
-import java.io.File;
-
-public class OpenAction extends Action {
-    @Override
-    public void call(DataFactory factory) {
-        try {
-            File file = factory.getData(DataKeys.OPEN_FILE);
-            if (file == null) file = Utils.openFileDialog(null);
-
-            Centauri.INSTANCE.openFile(file);
-        } catch (Exception e1) {
-            Centauri.INSTANCE.report(e1);
-        }
-    }
-
-    @Override
-    public String getDisplayName() {
-        return "Open...";
-    }
-
+interface IClassUpdateCallback {
+    void updateClass(ClassNode node);
 }

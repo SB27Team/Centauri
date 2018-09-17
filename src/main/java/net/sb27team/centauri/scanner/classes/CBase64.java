@@ -10,6 +10,7 @@
 
 package net.sb27team.centauri.scanner.classes;
 
+import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.scanner.IClassScanner;
 import net.sb27team.centauri.scanner.Scanner;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -40,10 +41,10 @@ public class CBase64 implements IClassScanner {
                     String encoded = ldc.cst.toString();
                     // TODO: Improve match regex
                     // It doesn't detect if it's valid. Just if it is the right length/chars
-                    byte[] bytes = encoded.getBytes();
+                    byte[] bytes = encoded.getBytes(Centauri.INSTANCE.getEncoding());
                     if (encoded.contains("==") && bytes.length >= 4 && regex.matcher(encoded).matches())
                         try {
-                            String decoded = new String(Base64.getDecoder().decode(bytes));
+                            String decoded = new String(Base64.getDecoder().decode(bytes), Centauri.INSTANCE.getEncoding());
                             decrypts.add(decoded);
                         } catch (Exception ignored) {
                         }

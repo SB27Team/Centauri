@@ -107,4 +107,5 @@ public class CFREditor extends AbstractCodeEditor {
     public String name() {
         return "CFR Decompiler";
     }
+
 }

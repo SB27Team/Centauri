@@ -46,6 +46,7 @@ public class ASMUtils {
                 cns.add(cn);
             }
         }
+        zis.close();
         return cns;
     }
 }

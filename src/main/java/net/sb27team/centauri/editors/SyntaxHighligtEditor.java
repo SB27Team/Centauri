@@ -101,4 +101,10 @@ public class SyntaxHighligtEditor implements IEditor {
     public String name() {
         return "SyntaxHighlightingEditor";
     }
+
+
+    @Override
+    public int priority() {
+        return PRIORITY_SYNTAX_EDITOR;
+    }
 }

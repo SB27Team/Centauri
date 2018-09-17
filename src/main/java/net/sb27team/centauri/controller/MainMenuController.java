@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.Main;
-import net.sb27team.centauri.actions.*;
+import net.sb27team.centauri.actions.ActionManager;
 import net.sb27team.centauri.actions.impl.CloseAction;
 import net.sb27team.centauri.actions.impl.ExitAcion;
 import net.sb27team.centauri.actions.impl.ExportAction;
@@ -174,9 +174,9 @@ public class MainMenuController {
             List<File> files = e.getDragboard().getFiles();
 
             if (files.size() > 0) {
-                DataFactory factory = new DataFactory();
-                factory.putData(DataKeys.OPEN_FILE, files.get(0));
                 e.setDropCompleted(true);
+
+                Centauri.INSTANCE.openFile(files.get(0));
             }
         }
     }
@@ -281,7 +281,7 @@ public class MainMenuController {
     @FXML
     public void fullscreenToggle(ActionEvent event) {
         CheckMenuItem menuItem = (CheckMenuItem) event.getSource();
-        Main.getInstance().getStage().setFullScreen(menuItem.isSelected());
+        ((Stage) ((Node) event.getTarget()).getScene().getWindow()).setFullScreen(menuItem.isSelected());
     }
 
     public void toggleCompremise(ActionEvent event) {

@@ -38,13 +38,16 @@ import java.io.InputStream;
  * Created by Cubxity on 18/05/2018
  */
 public abstract class AbstractCodeEditor implements IEditor {
-    public static Theme theme;
+    static Theme theme;
 
     static {
+        Theme theme = null;
         try {
             theme = Theme.load(Main.class.getResourceAsStream("/code/style.xml"));
         } catch (IOException e) {
             Centauri.INSTANCE.report(e);
+        } finally {
+            AbstractCodeEditor.theme = theme;
         }
     }
 
@@ -106,4 +109,10 @@ public abstract class AbstractCodeEditor implements IEditor {
     abstract String getSyntax(String fileName);
 
     abstract String getContext(FileComponent classFile, File jar) throws Exception;
+
+
+    @Override
+    public int priority() {
+        return PRIORITY_DECOMPILER;
+    }
 }

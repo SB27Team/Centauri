@@ -19,10 +19,19 @@ import java.io.InputStream;
  * Created by Cubxity on 18/05/2018
  */
 public interface IEditor {
+    int PRIORITY_TEXT_EDITOR = 0;
+    int PRIORITY_DECOMPILER = 1;
+    int PRIORITY_SYNTAX_EDITOR = 1;
+    int PRIORITY_SPECIAL_EDITOR = 2;
 
     void open(FileComponent file, InputStream stream, Tab tab);
 
     boolean supports(String type, String name);
 
     String name();
+
+    /**
+     * @return Priority from 0 (highest) to infinitive (lowest)
+     */
+    int priority();
 }

@@ -7,47 +7,51 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package net.sb27team.centauri.editors;
 
-import javafx.scene.control.ScrollPane;
+package net.sb27team.centauri.editors.bytecode;
+
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import net.sb27team.centauri.Centauri;
+import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.FileComponent;
-import net.sb27team.centauri.utils.Utils;
+import net.sb27team.centauri.resource.ResourceManager;
 
 import java.io.InputStream;
 
-/*
- * Created by Cubxity on 18/05/2018
- */
-public class ImageEditor implements IEditor {
+public class BytecodeEditor implements IEditor {
 
     @Override
     public void open(FileComponent file, InputStream stream, Tab tab) {
         try {
-            ScrollPane pane = new ScrollPane();
-            Image image = new Image(stream);
-            pane.setContent(new ImageView(image));
-            tab.setContent(pane);
+            tab.setContent(new BytecodeEditorPane(file.getClassNode(), classNode -> {
+                file.updateClassNode(classNode);
+            }));
         } catch (Exception e) {
+            Label l = new Label("  The class file isn't valid", new ImageView(ResourceManager.SAD_FACE));
+            l.setTextAlignment(TextAlignment.CENTER);
+            l.setFont(javafx.scene.text.Font.font("Roboto", FontWeight.BOLD, 20));
+            tab.setContent(l);
             Centauri.INSTANCE.report(e);
         }
     }
 
     @Override
     public boolean supports(String type, String name) {
-        return type.equals("image") || Utils.isImage(name);
+        return name.endsWith(".class");
     }
 
     @Override
     public String name() {
-        return "Image viewer";
+        return "BytecodeEditor";
     }
+
 
     @Override
     public int priority() {
-        return PRIORITY_DECOMPILER;
+        return PRIORITY_SPECIAL_EDITOR;
     }
 }

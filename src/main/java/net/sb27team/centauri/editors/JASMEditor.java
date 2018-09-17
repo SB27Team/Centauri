@@ -18,6 +18,7 @@ import net.sb27team.centauri.utils.Utils;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public class JASMEditor extends AbstractCodeEditor {
@@ -38,7 +39,7 @@ public class JASMEditor extends AbstractCodeEditor {
 
         Platform.runLater(() -> MainMenuController.INSTANCE.setStatus("Ready"));
 
-        return new String(ByteStreams.toByteArray(process.getInputStream()), "UTF-8");
+        return new String(ByteStreams.toByteArray(process.getInputStream()), StandardCharsets.UTF_8);
     }
 
     @Override
@@ -55,4 +56,6 @@ public class JASMEditor extends AbstractCodeEditor {
     public String name() {
         return "JavaP Disassembler";
     }
+
+
 }

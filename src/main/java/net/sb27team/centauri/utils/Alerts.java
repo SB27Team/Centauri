@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import net.sb27team.centauri.Centauri;
 
 public class Alerts {
 
@@ -23,7 +24,7 @@ public class Alerts {
         errorDialog("No file opened");
     }
 
-    public static void exeptionDialog(Throwable throwable) {
+    public static void exceptionDialog(Throwable throwable) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Thrown");
         alert.setContentText(throwable.getMessage());
@@ -47,10 +48,19 @@ public class Alerts {
         alert.show();
     }
 
-    private static void errorDialog(String string) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Error", ButtonType.OK);
-        alert.setContentText(string);
+    public static void errorDialog(String string) {
+        showDialog(Alert.AlertType.ERROR, string);
+    }
+
+    private static void showDialog(Alert.AlertType type, String string) {
+        Alert alert = new Alert(type, string, ButtonType.OK);
+
+        Centauri.applyStyle(alert);
+
         alert.showAndWait();
     }
 
+    public static void failedDelete(String file) {
+        errorDialog("Failed to delete " + file);
+    }
 }

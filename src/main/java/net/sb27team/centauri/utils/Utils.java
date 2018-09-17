@@ -13,11 +13,13 @@ package net.sb27team.centauri.utils;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import net.sb27team.centauri.editors.*;
+import net.sb27team.centauri.editors.bytecode.BytecodeEditor;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,12 +30,17 @@ public class Utils {
             new CFREditor(),
             new ProcyonEditor(),
 //            new JDEditor(),
+            new BytecodeEditor(),
             new SyntaxHighligtEditor(),
             new TextEditor(),
             new ImageEditor(),
             new HexEditor(),
             new JASMEditor() // should be the last one
     );
+
+    static {
+        editors.sort(Comparator.comparingInt(editor -> -editor.priority()));
+    }
 
     public static File openFileDialog(Window window) {
         FileChooser chooser = new FileChooser();
@@ -63,7 +70,7 @@ public class Utils {
     public static boolean isImage(String name) {
         if (name.lastIndexOf(".") == -1)
             return false;
-        String str = name.substring(name.lastIndexOf(".") + 1, name.length()).toLowerCase();
+        String str = name.substring(name.lastIndexOf(".") + 1).toLowerCase();
 
         return str.equals("png") || str.equals("bmp") || str.equals("jpg") || str.equals("jpeg") || str.equals("gif");
     }
@@ -98,12 +105,18 @@ public class Utils {
         return sw.toString();
     }
 
+    public static void deleteFile(File file) {
+        if (!file.delete()) {
+            Alerts.failedDelete(file.getAbsolutePath());
+        }
+    }
+
     public enum OSType {
         WINDOWS,
         MACOSX,
         UNIX,
         SOLARIS,
-        UNKNOWN;
+        UNKNOWN
     }
 
 

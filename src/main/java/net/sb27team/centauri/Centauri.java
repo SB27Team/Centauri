@@ -10,6 +10,9 @@
 
 package net.sb27team.centauri;
 
+import com.google.common.io.ByteStreams;
+import javafx.scene.Scene;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
@@ -17,20 +20,27 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import javafx.util.Pair;
+import net.sb27team.centauri.actions.ActionManager;
+import net.sb27team.centauri.actions.impl.CloseAction;
+import net.sb27team.centauri.controller.MainMenuController;
 import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.editors.IEditor;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Alerts;
 import net.sb27team.centauri.utils.Configuration;
+import net.sb27team.centauri.utils.IProgressCallback;
 import net.sb27team.centauri.utils.Utils;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
@@ -38,12 +48,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class Centauri {
-
-    public static Centauri INSTANCE = new Centauri();
+    public static final Centauri INSTANCE = new Centauri();
     public static final Logger LOGGER = Logger.getAnonymousLogger();
-    public static boolean DEBUG = true;
+    public static final boolean DEBUG = true;
     private ZipFile openedZipFile = null;
     private File openedFile = null;
     private List<ZipEntry> loadedZipEntries = new ArrayList<>();
@@ -64,6 +74,16 @@ public class Centauri {
     }
 
     private List<Thread> threads = new ArrayList<>();
+    private Charset encoding = StandardCharsets.UTF_8;
+
+    public static void applyStyle(Scene scene, Stage stage) {
+        stage.getIcons().add(ResourceManager.CENTAURI_ICON);
+        scene.getStylesheets().add("/gui/style.css");
+    }
+
+    public static void applyStyle(Dialog dialog) {
+        applyStyle(dialog.getDialogPane().getScene(), (Stage) dialog.getDialogPane().getScene().getWindow());
+    }
 
     public Tab openTab(FileComponent res) {
         return openTab(res, getOptimalEditor(res));
@@ -157,7 +177,7 @@ public class Centauri {
             e.printStackTrace();
         }
 
-        Alerts.exeptionDialog(e);
+        Alerts.exceptionDialog(e);
     }
 
     public List<ZipEntry> getLoadedZipEntries() {
@@ -190,5 +210,116 @@ public class Centauri {
 
     public void addThread(Thread thread) {
         threads.add(thread);
+    }
+
+    public void openFile(File file) {
+        if (file == null) return;
+
+        Centauri.INSTANCE.getResourceTabMap().clear();
+
+        Centauri.LOGGER.info("Opening " + file.getName());
+
+        if (Centauri.INSTANCE.getOpenedFile() != null) {
+            ActionManager.INSTANCE.call(CloseAction.class);
+        }
+
+        MainMenuController.INSTANCE.setStatus("Opening " + file.getAbsolutePath());
+
+        try {
+            Centauri.INSTANCE.setOpenedZipFile(new ZipFile(file));
+            Centauri.INSTANCE.setOpenedFile(file);
+            Enumeration<? extends ZipEntry> entries = Centauri.INSTANCE.getOpenedZipFile().entries();
+
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                Centauri.INSTANCE.getLoadedZipEntries().add(entry);
+            }
+
+            MainMenuController.INSTANCE.updateTree();
+            MainMenuController.INSTANCE.setStatus("Ready");
+        } catch (Exception e) {
+            ActionManager.INSTANCE.call(CloseAction.class);
+            MainMenuController.INSTANCE.updateTree();
+            MainMenuController.INSTANCE.setStatus("Error " + e);
+            Centauri.INSTANCE.report(e);
+        }
+
+        MainMenuController.INSTANCE.updateRPC();
+    }
+
+    public void export(File file, IProgressCallback callback) {
+        try {
+            int entryCount = Centauri.INSTANCE.getOpenedZipFile().size();
+
+            Enumeration<? extends ZipEntry> entries = Centauri.INSTANCE.getOpenedZipFile().entries();
+            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
+
+            int currentEntry = 0;
+
+
+            List<String> exported = new ArrayList<>();
+
+            for (Map.Entry<ZipEntry, byte[]> zipEntryEntry : Centauri.INSTANCE.getUpdatedData().entrySet()) {
+                zos.putNextEntry(new ZipEntry(zipEntryEntry.getKey().getName()));
+                zos.write(zipEntryEntry.getValue());
+
+                exported.add(zipEntryEntry.getKey().getName());
+
+                zos.closeEntry();
+
+                if (Thread.interrupted()) throw new InterruptedException();
+            }
+
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+
+                if (!exported.contains(entry.getName())) {
+                    zos.putNextEntry(new ZipEntry(entry.getName()));
+                    ByteStreams.copy(Centauri.INSTANCE.getInputStream(entry), zos);
+                    zos.closeEntry();
+
+                    if (Thread.interrupted()) throw new InterruptedException();
+                }
+
+                currentEntry++;
+                callback.progressUpdate(currentEntry, entryCount);
+            }
+            zos.close();
+            callback.end(true);
+        } catch (InterruptedException e) {
+            LOGGER.fine("Exporting was cancelled");
+        } catch (Exception e) {
+            Centauri.INSTANCE.report(e);
+            callback.end(false);
+        }
+    }
+
+    public ClassNode getClassNode(FileComponent fileComponent) throws IOException {
+        return getClassNode(fileComponent.getZipEntry());
+    }
+
+    private ClassNode getClassNode(ZipEntry zipEntry) throws IOException {
+        byte[] data = ByteStreams.toByteArray(getInputStream(zipEntry));
+
+        ClassReader reader = new ClassReader(data);
+        ClassNode node = new ClassNode();
+        reader.accept(node, 0);
+
+        return node;
+    }
+
+    public Charset getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(Charset encoding) {
+        this.encoding = encoding;
+    }
+
+    public byte[] classNodeToBytes(ClassNode classNode) {
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classNode.accept(classWriter);
+
+        return classWriter.toByteArray();
     }
 }

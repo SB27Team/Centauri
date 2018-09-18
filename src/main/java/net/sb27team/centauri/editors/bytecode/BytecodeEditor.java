@@ -27,9 +27,11 @@ public class BytecodeEditor implements IEditor {
     @Override
     public void open(FileComponent file, InputStream stream, Tab tab) {
         try {
-            tab.setContent(new BytecodeEditorPane(file.getClassNode(), classNode -> {
-                file.updateClassNode(classNode);
-            }));
+            tab.setContent(
+//                    Utils.scrollPane(
+                    new BytecodeEditorPane(file.getClassNode(), file::updateClassNode)
+//                    )
+            );
         } catch (Exception e) {
             Label l = new Label("  The class file isn't valid", new ImageView(ResourceManager.SAD_FACE));
             l.setTextAlignment(TextAlignment.CENTER);

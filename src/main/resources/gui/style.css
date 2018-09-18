@@ -16,7 +16,7 @@
     -fx-background-color: rgb(38, 40, 39);
 }
 
-.tab-pane, .tab, .tab-content-area, .web-view {
+.tab-pane, .dialog-pane, .tab, .tab-content-area, .web-view {
     -fx-background-color: rgb(34, 34, 34);
 }
 
@@ -28,9 +28,14 @@
     -fx-border-radius: 0;
 }
 
-.menu-item:hover, .tree-cell:selected, .tab:focused, .tab:hover, .combo-box-popup:hover .list-view:hover, .button:hover {
+.menu-item:hover, .tree-cell:selected, .tab:focused, .tab:hover, .combo-box-popup:hover .list-view:hover, .button:hover, .check-box:selected .box {
     -fx-background-color: rgb(0, 150, 201);
     -fx-border-style: none;
+}
+.check-box .box {
+    -fx-background-color: rgb(34, 34, 34);
+    -fx-border-color:white;
+    -fx-border-radius:5px;
 }
 
 .separator *.line {
@@ -42,8 +47,11 @@
     -fx-background-color: TRANSPARENT;
 }
 
-.label, .tab-label {
+.label, .check-box, .tab-label {
     -fx-text-fill: WHITE;
+}
+.check-box:selected .mark {
+    -fx-background-color: transparent;
 }
 
 .scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {

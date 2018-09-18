@@ -10,6 +10,9 @@
 
 package net.sb27team.centauri.utils;
 
+import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import net.sb27team.centauri.editors.*;
@@ -109,6 +112,10 @@ public class Utils {
         if (!file.delete()) {
             Alerts.failedDelete(file.getAbsolutePath());
         }
+    }
+
+    public static ScrollPane scrollPane(Node comp) {
+        return new ScrollPane(new Pane(comp));
     }
 
     public enum OSType {

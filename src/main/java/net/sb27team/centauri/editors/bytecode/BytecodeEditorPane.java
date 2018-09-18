@@ -61,6 +61,8 @@ public class BytecodeEditorPane extends GridPane {
 
         int index = 0;
 
+//        setPadding(new Insets(getPadding().getTop(), 10.0f, getPadding().getBottom(), 10.0f));
+
         addRow(index++, new Label("Name: "), className, classNameStateLabel);
         addRow(index++, new Label("Access: "), changeAccess);
         addRow(index++, new Label("SourceFile: "), sourceFile);

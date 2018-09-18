@@ -42,6 +42,7 @@ public class ScannerController {
 
     public void initialize() {
         INSTANCE = this;
+        table.getSelectionModel().setCellSelectionEnabled(true);
         level.setCellValueFactory(new PropertyValueFactory<>("level"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         desc.setCellValueFactory(new PropertyValueFactory<>("description"));

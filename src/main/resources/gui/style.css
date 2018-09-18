@@ -1,7 +1,9 @@
 .root {
     -fx-focus-color: transparent;
 }
-
+.text{
+    -fx-font-smoothing-type: gray;
+}
 .tab:focused {
     -fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;
     -fx-background-insets: 0, 1, 2;
@@ -16,8 +18,19 @@
     -fx-background-color: rgb(38, 40, 39);
 }
 
-.tab-pane, .dialog-pane, .tab, .tab-content-area, .web-view {
+.tab-pane, .dialog-pane, .tab, .tab-content-area, .web-view, .text-area .content {
     -fx-background-color: rgb(34, 34, 34);
+}
+
+.text-area, .code-area {
+    -fx-font-family: Consolas;
+    -fx-font-size: 14;
+    -fx-text-fill: WHITE;
+    -fx-display-caret:true;
+}
+
+.text-area .content {
+    -fx-background-color: #000000;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab {
@@ -37,6 +50,10 @@
     -fx-border-color:white;
     -fx-border-radius:5px;
 }
+.code-area, .button {
+    -fx-border-color:white;
+    -fx-border-radius: 2px;
+}
 
 .separator *.line {
     -fx-background-color: rgb(38, 40, 39);
@@ -47,7 +64,7 @@
     -fx-background-color: TRANSPARENT;
 }
 
-.label, .check-box, .tab-label {
+.label, .check-box, .tab-label, .text-area {
     -fx-text-fill: WHITE;
 }
 .check-box:selected .mark {
@@ -112,4 +129,42 @@
 
 .tree-cell:expanded > .tree-disclosure-node > .arrow {
     -fx-background-color: white;
+}
+// This is for the editor
+
+.code-area {
+    -fx-background-color: black;
+}
+.code-area .paragraph-box .paragraph-text .text, .lineno {
+    -fx-fill: #d4d4d4;
+}
+#code-area .keyword {
+    -fx-fill: #348cd6;
+    -fx-font-weight: bold;
+}
+#code-area .paren {
+    -fx-fill: #d4d4d4;
+}
+#code-area .bracket {
+    -fx-fill: #d4d4d4;
+}
+#code-area .brace {
+    -fx-fill: #d4d4d4;
+}
+#code-area .number {
+    -fx-fill: #b5cea8;
+}
+#code-area .string {
+    -fx-fill: #ce9178;
+}
+
+#code-area .comment {
+	-fx-fill: #608b4e;
+}
+
+.lineno {
+    -fx-background-color: BLACK;
+}
+.paragraph-box:has-caret, selection {
+    -fx-background-color: rgb(34, 34, 34);
 }

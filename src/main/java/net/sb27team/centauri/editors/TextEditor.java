@@ -18,7 +18,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.text.Font;
 import net.sb27team.centauri.Centauri;
 import net.sb27team.centauri.explorer.FileComponent;
 
@@ -44,7 +43,6 @@ public class TextEditor implements IEditor {
         TextArea area = new TextArea();
         area.setEditable(false);
         area.setWrapText(false);
-        area.setFont(Font.font("Consolas", 13));
 
         BorderPane pane = new BorderPane();
         pane.setCenter(area);

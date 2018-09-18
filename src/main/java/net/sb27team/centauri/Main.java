@@ -18,7 +18,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.sb27team.centauri.actions.ActionManager;
-import net.sb27team.centauri.actions.impl.ExitAcion;
+import net.sb27team.centauri.actions.impl.ExitAction;
 import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.resource.ResourceManager;
 
@@ -45,7 +45,7 @@ public class Main extends Application {
         stage.setTitle("Centauri");
         stage.setScene(scene);
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
-            ActionManager.INSTANCE.call(ExitAcion.class);
+            ActionManager.INSTANCE.call(ExitAction.class);
             windowEvent.consume();
         });
         stage.getIcons().add(ResourceManager.CENTAURI_ICON);

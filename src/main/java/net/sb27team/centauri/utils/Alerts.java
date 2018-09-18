@@ -45,6 +45,8 @@ public class Alerts {
 
         alert.getDialogPane().setExpandableContent(expContent);
 
+        Centauri.applyStyle(alert);
+
         alert.show();
     }
 

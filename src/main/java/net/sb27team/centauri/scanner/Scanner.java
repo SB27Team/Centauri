@@ -46,7 +46,8 @@ public class Scanner {
             new MNetworkRef(),
             new MNativeInterface(),
             new MFileIO(),
-            new MClassLoader()
+            new MClassLoader(),
+            new MCommandExecution()
     );
 
     public Scanner(File jar) {

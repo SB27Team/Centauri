@@ -26,7 +26,6 @@ import java.io.File;
 
 public class Main extends Application {
 
-
     private Stage stage;
 
     public Stage getStage() {
@@ -53,7 +52,7 @@ public class Main extends Application {
         stage.getIcons().add(ResourceManager.CENTAURI_ICON);
         stage.show();
 
-        String file = Centauri.INSTANCE.getConfig().get("openedfile", null);
+        String file = Centauri.INSTANCE.getConfig().get("openedfile", "");
         if (file != null && !file.isEmpty()) {
             Centauri.INSTANCE.openFile(new File(file));
         }

@@ -51,6 +51,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class Centauri {
+
     public static final Centauri INSTANCE = new Centauri();
     public static final Logger LOGGER = Logger.getAnonymousLogger();
     public static final boolean DEBUG = true;
@@ -104,8 +105,8 @@ public class Centauri {
 
     public Optional<IEditor> getOptimalEditor(final FileComponent component) {
         File f = new File(component.getZipEntry().getName());
-        String mimetype = new MimetypesFileTypeMap().getContentType(f);
-        String type = mimetype.split("/")[0];
+        String mimeType = new MimetypesFileTypeMap().getContentType(f);
+        String type = mimeType.split("/")[0];
 
         String ext = "";
         if (f.getName().lastIndexOf(".") != -1)
@@ -332,4 +333,5 @@ public class Centauri {
 
         return classWriter.toByteArray();
     }
+
 }

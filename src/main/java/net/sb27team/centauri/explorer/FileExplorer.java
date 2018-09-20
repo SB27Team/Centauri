@@ -10,13 +10,13 @@
 
 package net.sb27team.centauri.explorer;
 
-import com.google.common.collect.Lists;
 import javafx.scene.control.TreeItem;
 import org.apache.commons.io.FilenameUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 public class FileExplorer {
@@ -87,19 +87,19 @@ public class FileExplorer {
             }
             return comp;
         });
-        for (Component component : list) {
-            if(component instanceof Directory) {
-                if (flattern) {
-                    StringBuilder builder = new StringBuilder();
-                    Directory direct = (Directory) component;
-
-                    Lists.reverse(direct.getParents()).forEach(directory1 -> builder.append(directory1.getName()).append(separator));
-                    builder.append(direct.getName());
-
-                    TreeItem<ExplorerItem> dir = getNodesForDirectory(direct);
-                    dir.setValue(new ExplorerItem(builder.toString(), direct));
-                    main.getChildren().add(dir);
-                } else {
+        if (flattern) {
+            List<Directory> validDirectorys = getFlattenedDirectories();
+            validDirectorys.forEach(cDirectory -> {
+                TreeItem<ExplorerItem> comp = new TreeItem<>(new ExplorerItem(cDirectory.getFullPath(), cDirectory));
+                cDirectory.getFiles().stream().filter(component -> component instanceof FileComponent).forEach(file -> {
+                    TreeItem<ExplorerItem> fileNode = new TreeItem<>(new ExplorerItem(showFileType ? file.getName() : FilenameUtils.getBaseName(file.getName()), file));
+                    comp.getChildren().add(fileNode);
+                });
+                root.getChildren().add(comp);
+            });
+        } else {
+            for (Component component : list) {
+                if (component instanceof Directory) {
                     StringBuilder name = new StringBuilder(component.getName());
                     Directory current = (Directory) component;
                     while (compremise && current.getFiles().size() == 1 && current.getFiles().get(0) instanceof Directory) {
@@ -109,13 +109,30 @@ public class FileExplorer {
                     TreeItem<ExplorerItem> dir = getNodesForDirectory(current);
                     dir.setValue(new ExplorerItem(name.toString(), current));
                     root.getChildren().add(dir);
+                } else {
+                    TreeItem<ExplorerItem> file = new TreeItem<>(new ExplorerItem(showFileType ? component.getName() : FilenameUtils.getBaseName(component.getName()), component));
+                    root.getChildren().add(file);
                 }
-            } else {
-                TreeItem<ExplorerItem> file = new TreeItem<>(new ExplorerItem(showFileType ? component.getName() : FilenameUtils.getBaseName(component.getName()), component));
-                root.getChildren().add(file);
             }
         }
         return root;
+    }
+
+    private List<Directory> getFlattenedDirectories() {
+        return collectAllDirectories(mainPackage).stream()
+                .filter(directory -> directory.getFiles().isEmpty() || directory.getFiles().stream().anyMatch(component -> component instanceof FileComponent)).collect(Collectors.toList());
+    }
+
+    private List<Directory> collectAllDirectories(Directory head) {
+        List<Directory> all = new ArrayList<>();
+        for (Component component : head.getFiles()) {
+            if (component instanceof Directory) {
+                Directory directory = (Directory) component;
+                all.add(directory);
+                all.addAll(collectAllDirectories(directory));
+            }
+        }
+        return all;
     }
 
     public TreeItem<ExplorerItem> getMain() {

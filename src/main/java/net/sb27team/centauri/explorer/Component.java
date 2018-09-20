@@ -28,8 +28,8 @@ public class Component {
     public List<Directory> getParents() {
         List<Directory> parents = new ArrayList<>();
         Directory currentParent = parent;
-        while (currentParent.getParent() != MainMenuController.INSTANCE.getFileExplorer().getMainPackage()) {
-            parents.add(currentParent.getParent());
+        while (currentParent.getParent() != null) {
+            parents.add(currentParent);
             currentParent = currentParent.getParent();
         }
         return parents;

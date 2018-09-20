@@ -69,7 +69,7 @@ public class Centauri {
         handler.setLevel(DEBUG ? Level.FINEST : Level.INFO);
         LOGGER.addHandler(handler);
         LOGGER.setUseParentHandlers(false);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> INSTANCE.shutDown()));
+        Runtime.getRuntime().addShutdownHook(new Thread(INSTANCE::shutDown));
 //        LOGGER.setFilter(record -> DEBUG || record.getLevel().intValue() >= Level.INFO.intValue());
     }
 
@@ -120,7 +120,6 @@ public class Centauri {
         }
         return optional;
     }
-
 
     private void addContent(FileComponent res, Tab tab, Optional<IEditor> editor) {
         StackPane pane = new StackPane();
@@ -214,6 +213,10 @@ public class Centauri {
 
     public void openFile(File file) {
         if (file == null) return;
+        if (!file.exists()) {
+            Alerts.errorDialog("The entered File does not Exists");
+            return;
+        }
 
         Centauri.INSTANCE.getResourceTabMap().clear();
 
@@ -237,6 +240,9 @@ public class Centauri {
 
             MainMenuController.INSTANCE.updateTree();
             MainMenuController.INSTANCE.setStatus("Ready");
+
+            /* Only set if no exception catched */
+            config.set("openedfile", file.getAbsolutePath());
         } catch (Exception e) {
             ActionManager.INSTANCE.call(CloseAction.class);
             MainMenuController.INSTANCE.updateTree();
@@ -314,6 +320,10 @@ public class Centauri {
 
     public void setEncoding(Charset encoding) {
         this.encoding = encoding;
+    }
+
+    public Configuration getConfig() {
+        return config;
     }
 
     public byte[] classNodeToBytes(ClassNode classNode) {

@@ -22,6 +22,8 @@ import net.sb27team.centauri.actions.impl.ExitAction;
 import net.sb27team.centauri.discord.DiscordIntegration;
 import net.sb27team.centauri.resource.ResourceManager;
 
+import java.io.File;
+
 public class Main extends Application {
 
 
@@ -50,6 +52,11 @@ public class Main extends Application {
         });
         stage.getIcons().add(ResourceManager.CENTAURI_ICON);
         stage.show();
+
+        String file = Centauri.INSTANCE.getConfig().get("openedfile", null);
+        if (file != null && !file.isEmpty()) {
+            Centauri.INSTANCE.openFile(new File(file));
+        }
     }
 
     public static void main(String args[]) {

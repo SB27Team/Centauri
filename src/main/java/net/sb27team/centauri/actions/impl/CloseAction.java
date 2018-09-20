@@ -14,6 +14,7 @@ public class CloseAction extends Action {
     public void call(DataFactory factory) {
         Centauri.LOGGER.fine("Closing file...");
 
+        Centauri.INSTANCE.getConfig().set("openedfile", null);
         Centauri.INSTANCE.getResourceTabMap().clear();
 
         if (Centauri.INSTANCE.getOpenedZipFile() != null) {

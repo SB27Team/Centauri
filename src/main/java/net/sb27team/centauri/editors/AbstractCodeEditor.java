@@ -11,7 +11,6 @@
 package net.sb27team.centauri.editors;
 
 import javafx.application.Platform;
-import javafx.embed.swing.SwingNode;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,14 +24,15 @@ import net.sb27team.centauri.Main;
 import net.sb27team.centauri.explorer.FileComponent;
 import net.sb27team.centauri.resource.ResourceManager;
 import net.sb27team.centauri.utils.Mapper;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import net.sb27team.centauri.utils.synax.SyntaxHighlightingManager;
 import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 
 /*
  * Created by Cubxity on 18/05/2018
@@ -78,18 +78,46 @@ public abstract class AbstractCodeEditor implements IEditor {
             final String text = raw;
 
             Platform.runLater(() -> {
-                SwingNode sn = new SwingNode();
-                RSyntaxTextArea sta = new RSyntaxTextArea();
-                sta.setEditable(false);
-                sta.setText(text);
-                sta.setSyntaxEditingStyle(getSyntax(file.getName()));
-                sta.setFont(new Font("Consolas", Font.PLAIN, 14));
+//                SwingNode sn = new SwingNode();
+//                RSyntaxTextArea sta = new RSyntaxTextArea();
+//                sta.setEditable(false);
+//                sta.setText(text);
+//                sta.setSyntaxEditingStyle(getSyntax(file.getName()));
+//                sta.setFont(new Font("Consolas", Font.PLAIN, 14));
+//
+//                if (theme != null)
+//                    theme.apply(sta);
+                CodeArea codeArea = new CodeArea();
 
-                if (theme != null)
-                    theme.apply(sta);
+                // add line numbers to the left of area
+                codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
-                sn.setContent(new RTextScrollPane(sta));
-                tab.setContent(sn);
+                // recompute the syntax highlighting 500 ms after user stops editing area
+                codeArea
+
+                        // plain changes = ignore style changes that are emitted when syntax highlighting is reapplied
+                        // multi plain changes = save computation by not rerunning the code multiple times
+                        //   when making multiple changes (e.g. renaming a method at multiple parts in file)
+                        .multiPlainChanges()
+
+                        // do not emit an event until 500 ms have passed since the last emission of previous stream
+                        .successionEnds(Duration.ofMillis(500))
+
+                        // run the following code block when previous stream emits an event
+                        .subscribe(ignore -> codeArea.setStyleSpans(0, SyntaxHighlightingManager.tokenize(getSyntax(file.getName()), codeArea.getText())));
+
+                // when no longer need syntax highlighting and wish to clean up memory leaks
+                // run: `cleanupWhenNoLongerNeedIt.unsubscribe();`
+
+                codeArea.replaceText(0, 0, text);
+                codeArea.setId("code-area");
+                codeArea.setAutoScrollOnDragDesired(true);
+                codeArea.setEditable(false);
+                codeArea.moveTo(0);
+                codeArea.selectRange(0, 0);
+
+
+                tab.setContent(codeArea);
             });
         }, "Decompiler thread");
         EventHandler<javafx.scene.input.MouseEvent> handler = event -> {
